@@ -1,9 +1,48 @@
 // ---- IMPORTACIONES ---- //
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (INICIO DE SESION) ---- //
 export default function Login() {
+    // ---- ESTADOS ---- //
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [submit, setSubmit] = useState(false);
+    const [errores, setErrores] = useState({
+        emailUsuario: false,
+        passwordUsuario: false,
+    });
+    // ---- ---- ---- ---- //
+
+    // ---- EFECTOS ---- //
+    useEffect(() => {
+        const error = {
+            emailUsuario: false,
+            passwordUsuario: false,
+        };
+
+        [email].includes('')
+            ? (error.emailUsuario = true)
+            : (error.emailUsuario = false);
+
+        [password].includes('')
+            ? (error.passwordUsuario = true)
+            : (error.passwordUsuario = false);
+
+        setErrores(error);
+    }, [email, password]);
+    // ---- ---- ---- ---- //
+
+    // ---- FUNCIONES ---- //
+    const handleSubmit = (e) => {
+        // VALIDACION DEL FORMULARIO
+        e.preventDefault();
+        setSubmit(true);
+    };
+    // ---- ---- ---- ---- //
+
     return (
         <>
             {/* Informacion */}
@@ -13,41 +52,29 @@ export default function Login() {
             </h1>
 
             {/* Formulario */}
-            <form className="my-10 shadow rounded-lg">
+            <form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>
                 {/* Email */}
-                <div className="my-5">
-                    {/* Texto Ayuda */}
-                    <label
-                        className="uppercase block text-xl font-bold text-gray-50"
-                        htmlFor="email"
-                    >
-                        Email
-                    </label>
-                    {/* Tu Email */}
-                    <input
-                        className="w-full mt-3 p-3 border-[3px] border-gray-600 hover:border-teal-500 transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-[3px] focus:border-teal-500"
-                        type="email"
-                        id="email"
-                        placeholder="¿Pondrias tu Email?"
-                    />
-                </div>
+                <Input
+                    dato={email}
+                    setDato={setEmail}
+                    placeholder="¿Pondrias tu Email?"
+                    label={'Email'}
+                    htmlFor={'email'}
+                    type={'email'}
+                    errores={errores.emailUsuario}
+                    submit={submit}
+                />
                 {/* Password */}
-                <div className="my-5">
-                    {/* Texto Ayuda */}
-                    <label
-                        className="uppercase block text-xl font-bold text-gray-50"
-                        htmlFor="password"
-                    >
-                        Contraseña
-                    </label>
-                    {/* Tu Password */}
-                    <input
-                        className="w-full mt-3 p-3 border-[3px] border-gray-600 hover:border-teal-500 transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-[3px] focus:border-teal-500"
-                        type="password"
-                        id="password"
-                        placeholder="¿Pondrias tu Contraseña?"
-                    />
-                </div>
+                <Input
+                    dato={password}
+                    setDato={setPassword}
+                    placeholder="¿Pondrias tu Contraseña?"
+                    label={'Contraseña'}
+                    htmlFor={'password'}
+                    type={'password'}
+                    errores={errores.passwordUsuario}
+                    submit={submit}
+                />
 
                 {/* Boton Enviar */}
                 <input

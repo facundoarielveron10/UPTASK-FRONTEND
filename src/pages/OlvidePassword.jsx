@@ -1,9 +1,41 @@
 // ---- IMPORTACIONES ---- //
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (OLVIDE PASSWORD) ---- //
 export default function OlvidePassword() {
+    // ---- ESTADOS ---- //
+    const [email, setEmail] = useState('');
+    const [submit, setSubmit] = useState(false);
+    const [errores, setErrores] = useState({
+        emailUsuario: false,
+    });
+    // ---- ---- ---- ---- //
+
+    // ---- EFECTOS ---- //
+    useEffect(() => {
+        const error = {
+            emailUsuario: false,
+        };
+
+        [email].includes('')
+            ? (error.emailUsuario = true)
+            : (error.emailUsuario = false);
+
+        setErrores(error);
+    }, [email]);
+    // ---- ---- ---- ---- //
+
+    // ---- FUNCIONES ---- //
+    const handleSubmit = (e) => {
+        // VALIDACION DEL FORMULARIO
+        e.preventDefault();
+        setSubmit(true);
+    };
+    // ---- ---- ---- ---- //
+
     return (
         <>
             {/* Informacion */}
@@ -13,24 +45,18 @@ export default function OlvidePassword() {
             </h1>
 
             {/* Formulario */}
-            <form className="my-10 shadow rounded-lg">
+            <form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>
                 {/* Email */}
-                <div className="my-5">
-                    {/* Texto Ayuda */}
-                    <label
-                        className="uppercase block text-xl font-bold text-gray-50"
-                        htmlFor="email"
-                    >
-                        Email
-                    </label>
-                    {/* Tu Email */}
-                    <input
-                        className="w-full mt-3 p-3 border-[3px] border-gray-600 hover:border-teal-500 transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-[3px] focus:border-teal-500"
-                        type="email"
-                        id="email"
-                        placeholder="¿Pondrias tu Email?"
-                    />
-                </div>
+                <Input
+                    dato={email}
+                    setDato={setEmail}
+                    placeholder="¿Pondrias tu Email?"
+                    label={'Email'}
+                    htmlFor={'email'}
+                    type={'email'}
+                    errores={errores.emailUsuario}
+                    submit={submit}
+                />
 
                 {/* Boton Enviar */}
                 <input
@@ -52,7 +78,7 @@ export default function OlvidePassword() {
                 {/* Registro */}
                 <Link
                     className="block text-center my-5 font-bold text-sky-700 hover:text-teal-500 transition-colors duration-300 uppercase text-sm"
-                    to="/olvide-password"
+                    to="/registrar"
                 >
                     ¿No tienes una cuenta?, Registrate
                 </Link>

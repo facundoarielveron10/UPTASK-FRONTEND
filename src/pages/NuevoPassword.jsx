@@ -1,8 +1,46 @@
 // ---- IMPORTACIONES ---- //
+import { useState, useEffect } from 'react';
+import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (NUEVO PASSWORD) ---- //
 export default function NuevoPassword() {
+    // ---- ESTADOS ---- //
+    const [password, setPassword] = useState('');
+    const [repetirPassword, setRepetirPassword] = useState('');
+    const [submit, setSubmit] = useState(false);
+    const [errores, setErrores] = useState({
+        emailUsuario: false,
+    });
+    // ---- ---- ---- ---- //
+
+    // ---- EFECTOS ---- //
+    useEffect(() => {
+        const error = {
+            passwordUsuario: false,
+            repetirPasswordUsuario: false,
+        };
+
+        [password].includes('')
+            ? (error.passwordUsuario = true)
+            : (error.passwordUsuario = false);
+
+        [repetirPassword].includes('')
+            ? (error.repetirPasswordUsuario = true)
+            : (error.repetirPasswordUsuario = false);
+
+        setErrores(error);
+    }, [password, repetirPassword]);
+    // ---- ---- ---- ---- //
+
+    // ---- FUNCIONES ---- //
+    const handleSubmit = (e) => {
+        // VALIDACION DEL FORMULARIO
+        e.preventDefault();
+        setSubmit(true);
+    };
+    // ---- ---- ---- ---- //
+
     return (
         <>
             {/* Informacion */}
@@ -12,41 +50,29 @@ export default function NuevoPassword() {
             </h1>
 
             {/* Formulario */}
-            <form className="my-10 shadow rounded-lg">
+            <form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>
                 {/* Password */}
-                <div className="my-5">
-                    {/* Texto Ayuda */}
-                    <label
-                        className="uppercase block text-xl font-bold text-gray-50"
-                        htmlFor="password"
-                    >
-                        Nueva Contraseña
-                    </label>
-                    {/* Tu Password */}
-                    <input
-                        className="w-full mt-3 p-3 border-[3px] border-gray-600 hover:border-teal-500 transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-[3px] focus:border-teal-500"
-                        type="password"
-                        id="password"
-                        placeholder="¿Pondrias tu Nueva Contraseña?"
-                    />
-                </div>
+                <Input
+                    dato={password}
+                    setDato={setPassword}
+                    placeholder="¿Pondrias tu Contraseña?"
+                    label={'Contraseña'}
+                    htmlFor={'password'}
+                    type={'password'}
+                    errores={errores.passwordUsuario}
+                    submit={submit}
+                />
                 {/* Repetir Password */}
-                <div className="my-5">
-                    {/* Texto Ayuda */}
-                    <label
-                        className="uppercase block text-xl font-bold text-gray-50"
-                        htmlFor="password"
-                    >
-                        Repetir Contraseña
-                    </label>
-                    {/* Tu Password */}
-                    <input
-                        className="w-full mt-3 p-3 border-[3px] border-gray-600 hover:border-teal-500 transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-[3px] focus:border-teal-500"
-                        type="password"
-                        id="password"
-                        placeholder="¿Pondrias repetir tu Nueva Contraseña?"
-                    />
-                </div>
+                <Input
+                    dato={repetirPassword}
+                    setDato={setRepetirPassword}
+                    placeholder="¿Pondrias tu Nueva Contraseña?"
+                    label={'Nueva Contraseña'}
+                    htmlFor={'password2'}
+                    type={'password'}
+                    errores={errores.repetirPasswordUsuario}
+                    submit={submit}
+                />
 
                 {/* Boton Enviar */}
                 <input
