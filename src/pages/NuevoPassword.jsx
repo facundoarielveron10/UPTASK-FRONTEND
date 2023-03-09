@@ -14,6 +14,7 @@ export default function NuevoPassword() {
 		repetirPasswordUsuario: false,
 		igualdadPassword: false,
 	});
+	const [alerta, setAlerta] = useState({ msg: '', error: false });
 	// ---- ---- ---- ---- //
 
 	// ---- EFECTOS ---- //
@@ -83,6 +84,7 @@ export default function NuevoPassword() {
 					errores={errores.passwordUsuario}
 					igualdad={errores.igualdadPassword}
 					submit={submit}
+					error={alerta}
 				/>
 				{/* Repetir Password */}
 				<Input
@@ -95,6 +97,7 @@ export default function NuevoPassword() {
 					errores={errores.repetirPasswordUsuario}
 					igualdad={errores.igualdadPassword}
 					submit={submit}
+					error={alerta}
 				/>
 
 				{/* Boton Enviar */}

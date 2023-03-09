@@ -90,7 +90,7 @@ export default function Registrar() {
 		// ENVIAR LOS DATOS
 		try {
 			const { data } = await axios.post(
-				`${import.meta.env.VITE_API_URL}/api/usuarios`,
+				`${import.meta.env.VITE_BACK_URL}/api/usuarios`,
 				{
 					nombre,
 					email,

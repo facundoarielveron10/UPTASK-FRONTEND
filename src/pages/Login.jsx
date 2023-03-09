@@ -14,6 +14,7 @@ export default function Login() {
 		emailUsuario: false,
 		passwordUsuario: false,
 	});
+	const [alerta, setAlerta] = useState({ msg: '', error: false });
 	// ---- ---- ---- ---- //
 
 	// ---- EFECTOS ---- //
@@ -76,6 +77,7 @@ export default function Login() {
 					type={'email'}
 					errores={errores.emailUsuario}
 					submit={submit}
+					error={alerta}
 				/>
 				{/* Password */}
 				<Input
@@ -86,7 +88,9 @@ export default function Login() {
 					htmlFor={'password'}
 					type={'password'}
 					errores={errores.passwordUsuario}
+					igualdad={errores.igualdadPassword}
 					submit={submit}
+					error={alerta}
 				/>
 
 				{/* Boton Enviar */}

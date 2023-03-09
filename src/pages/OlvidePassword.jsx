@@ -12,6 +12,7 @@ export default function OlvidePassword() {
 	const [errores, setErrores] = useState({
 		emailUsuario: false,
 	});
+	const [alerta, setAlerta] = useState({ msg: '', error: false });
 	// ---- ---- ---- ---- //
 
 	// ---- EFECTOS ---- //
@@ -63,6 +64,7 @@ export default function OlvidePassword() {
 					type={'email'}
 					errores={errores.emailUsuario}
 					submit={submit}
+					error={alerta}
 				/>
 
 				{/* Boton Enviar */}
