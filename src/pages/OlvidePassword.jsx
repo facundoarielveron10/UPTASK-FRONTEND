@@ -1,6 +1,8 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
@@ -32,7 +34,7 @@ export default function OlvidePassword() {
 	// ---- ---- ---- ---- //
 
 	// ---- FUNCIONES ---- //
-	const handleSubmit = e => {
+	const handleSubmit = async e => {
 		// VALIDACION DEL FORMULARIO
 		e.preventDefault();
 		setSubmit(true);
@@ -40,6 +42,28 @@ export default function OlvidePassword() {
 		// VALIDAMOS QUE NO HAYA ERRORES
 		if (errores.emailUsuario) {
 			return;
+		}
+
+		// ENVIAR DATOS
+		try {
+			const { data } = await axios.post(
+				`${import.meta.env.VITE_BACK_URL}/api/usuarios/olvide-password`,
+				{
+					email,
+				},
+			);
+			setAlerta({ msg: data.msg, error: false });
+			setTimeout(() => {
+				setErrores({
+					emailUsuario: false,
+				});
+				setSubmit(false);
+				setEmail('');
+				setAlerta({ msg: '', error: false });
+			}, 4000);
+		} catch (error) {
+			// Mostramos el error
+			setAlerta({ msg: error.response.data.msg, error: true });
 		}
 	};
 	// ---- ---- ---- ---- //
@@ -51,6 +75,11 @@ export default function OlvidePassword() {
 				Recupera tu acceso no pierdas tus{' '}
 				<span className="text-slate-700">proyectos</span>
 			</h1>
+
+			{/* Alerta */}
+			{![alerta.msg].includes('') ? (
+				<Alerta mensaje={alerta.msg} error={alerta.error} />
+			) : null}
 
 			{/* Formulario */}
 			<form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>

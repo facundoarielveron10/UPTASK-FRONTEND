@@ -113,7 +113,7 @@ export default function Registrar() {
 				setPassword('');
 				setRepetirPassword('');
 				setAlerta({ msg: '', error: false });
-			}, 3000);
+			}, 4000);
 		} catch (error) {
 			// Mostramos el error
 			setAlerta({ msg: error.response.data.msg, error: true });

@@ -1,5 +1,8 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
@@ -13,17 +16,43 @@ export default function NuevoPassword() {
 		passwordUsuario: false,
 		repetirPasswordUsuario: false,
 		igualdadPassword: false,
+		longitudPassword: false,
 	});
 	const [alerta, setAlerta] = useState({ msg: '', error: false });
+	const [tokenValido, setTokenValido] = useState(false);
+	// ---- ---- ---- ---- //
+
+	// ---- TOKEN (URL) ---- //
+	const params = useParams();
+	const { token } = params;
 	// ---- ---- ---- ---- //
 
 	// ---- EFECTOS ---- //
+	useEffect(() => {
+		const comprobarToken = async () => {
+			try {
+				const url = `${
+					import.meta.env.VITE_BACK_URL
+				}/api/usuarios/olvide-password/${token}`;
+				await axios(url);
+				setTokenValido(true);
+			} catch (error) {
+				setAlerta({ msg: error.response.data.msg, error: true });
+			}
+		};
+
+		return () => {
+			comprobarToken();
+		};
+	}, []);
+
 	useEffect(() => {
 		// ERRORES DE VALIDACION
 		const error = {
 			passwordUsuario: false,
 			repetirPasswordUsuario: false,
 			igualdadPassword: false,
+			longitudPassword: false,
 		};
 
 		// VALIDACIONES DE CAMPOS REQUERIDO
@@ -40,12 +69,19 @@ export default function NuevoPassword() {
 			? (error.igualdadPassword = true)
 			: (error.igualdadPassword = false);
 
+		// VALIDACION DE LA LONGITUD DEL PASSWORD
+		if (password.length < 6 || repetirPassword.length < 6) {
+			error.longitudPassword = true;
+		} else {
+			error.longitudPassword = false;
+		}
+
 		setErrores(error);
 	}, [password, repetirPassword]);
 	// ---- ---- ---- ---- //
 
 	// ---- FUNCIONES ---- //
-	const handleSubmit = e => {
+	const handleSubmit = async e => {
 		// VALIDACION DEL FORMULARIO
 		e.preventDefault();
 		setSubmit(true);
@@ -60,6 +96,25 @@ export default function NuevoPassword() {
 		if (errorUsuario) {
 			return;
 		}
+
+		// ENVIAR DATOS
+		try {
+			const { data } = await axios.post(
+				`${
+					import.meta.env.VITE_BACK_URL
+				}/api/usuarios/olvide-password/${token}`,
+				{
+					password,
+				},
+			);
+			setAlerta({ msg: data.msg, error: false });
+			setTimeout(() => {
+				window.location = '/';
+			}, 4000);
+		} catch (error) {
+			// Mostramos el error
+			setAlerta({ msg: error.response.data.msg, error: true });
+		}
 	};
 	// ---- ---- ---- ---- //
 
@@ -71,42 +126,58 @@ export default function NuevoPassword() {
 				<span className="text-slate-700">proyectos</span>
 			</h1>
 
-			{/* Formulario */}
-			<form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>
-				{/* Password */}
-				<Input
-					dato={password}
-					setDato={setPassword}
-					placeholder="¿Pondrias tu Contraseña?"
-					label={'Contraseña'}
-					htmlFor={'password'}
-					type={'password'}
-					errores={errores.passwordUsuario}
-					igualdad={errores.igualdadPassword}
-					submit={submit}
-					error={alerta}
-				/>
-				{/* Repetir Password */}
-				<Input
-					dato={repetirPassword}
-					setDato={setRepetirPassword}
-					placeholder="¿Pondrias tu Nueva Contraseña?"
-					label={'Nueva Contraseña'}
-					htmlFor={'password2'}
-					type={'password'}
-					errores={errores.repetirPasswordUsuario}
-					igualdad={errores.igualdadPassword}
-					submit={submit}
-					error={alerta}
-				/>
+			{/* Alerta */}
+			{![alerta.msg].includes('') ? (
+				<Alerta mensaje={alerta.msg} error={alerta.error} />
+			) : null}
 
-				{/* Boton Enviar */}
-				<input
-					className="bg-sky-700 hover:bg-teal-500 cursor-pointer text-gray-50 w-full py-3 uppercase font-bold rounded-xl transition-colors duration-300"
-					type="submit"
-					value="Guardar nuevo password"
-				/>
-			</form>
+			{/* Formulario */}
+			{tokenValido ? (
+				<form
+					className="my-10 shadow rounded-lg"
+					onSubmit={handleSubmit}
+				>
+					{/* Password */}
+					<Input
+						dato={password}
+						setDato={setPassword}
+						placeholder="¿Pondrias tu Contraseña?"
+						label={'Contraseña'}
+						htmlFor={'password'}
+						type={'password'}
+						errores={errores.passwordUsuario}
+						igualdad={errores.igualdadPassword}
+						submit={submit}
+						error={alerta}
+					/>
+					{/* Repetir Password */}
+					<Input
+						dato={repetirPassword}
+						setDato={setRepetirPassword}
+						placeholder="¿Pondrias tu Nueva Contraseña?"
+						label={'Nueva Contraseña'}
+						htmlFor={'password2'}
+						type={'password'}
+						errores={errores.repetirPasswordUsuario}
+						igualdad={errores.igualdadPassword}
+						submit={submit}
+						error={alerta}
+					/>
+
+					{/* Boton Enviar */}
+					<input
+						className="bg-sky-700 hover:bg-teal-500 cursor-pointer text-gray-50 w-full py-3 uppercase font-bold rounded-xl transition-colors duration-300"
+						type="submit"
+						value="Guardar nuevo password"
+					/>
+					{errores.longitudPassword & submit ? (
+						<p className="text-red-500 opacity-70 text-xs font-bold my-3">
+							Aclaracion las contraseñas deben tener al menos 6
+							caracteres
+						</p>
+					) : null}
+				</form>
+			) : null}
 		</>
 	);
 }

@@ -36,7 +36,6 @@ export default function ConfirmarCuenta() {
 			confirmarCuenta();
 		};
 	}, []);
-
 	// ---- ---- ---- ---- //
 
 	return (
