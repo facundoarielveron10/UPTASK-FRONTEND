@@ -1,6 +1,8 @@
 // ---- IMPORTACIONES ---- //
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import clienteAxios from '../config/ClienteAxios';
+import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
@@ -39,7 +41,7 @@ export default function Login() {
 	// ---- ---- ---- ---- //
 
 	// ---- FUNCIONES ---- //
-	const handleSubmit = e => {
+	const handleSubmit = async e => {
 		// VALIDACION DEL FORMULARIO
 		e.preventDefault();
 		setSubmit(true);
@@ -54,6 +56,21 @@ export default function Login() {
 		if (errorUsuario) {
 			return;
 		}
+
+		// ENVIAR DATOS
+		try {
+			const { data } = await clienteAxios.post('/usuarios/login', {
+				email,
+				password,
+			});
+			setErrores({ emailUsuario: false, passwordUsuario: false });
+			setAlerta({ msg: '', error: false });
+			setSubmit(false);
+			localStorage.setItem('token', data.token);
+		} catch (error) {
+			// Mostramos el error
+			setAlerta({ msg: error.response.data.msg, error: true });
+		}
 	};
 	// ---- ---- ---- ---- //
 
@@ -64,6 +81,11 @@ export default function Login() {
 				Inicia sesion y administra tus{' '}
 				<span className="text-slate-700">proyectos</span>
 			</h1>
+
+			{/* Alerta */}
+			{![alerta.msg].includes('') ? (
+				<Alerta mensaje={alerta.msg} error={alerta.error} />
+			) : null}
 
 			{/* Formulario */}
 			<form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>

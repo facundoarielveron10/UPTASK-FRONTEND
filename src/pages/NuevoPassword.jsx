@@ -1,7 +1,7 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
@@ -31,10 +31,7 @@ export default function NuevoPassword() {
 	useEffect(() => {
 		const comprobarToken = async () => {
 			try {
-				const url = `${
-					import.meta.env.VITE_BACK_URL
-				}/api/usuarios/olvide-password/${token}`;
-				await axios(url);
+				await clienteAxios(`/usuarios/olvide-password/${token}`);
 				setTokenValido(true);
 			} catch (error) {
 				setAlerta({ msg: error.response.data.msg, error: true });
@@ -99,10 +96,8 @@ export default function NuevoPassword() {
 
 		// ENVIAR DATOS
 		try {
-			const { data } = await axios.post(
-				`${
-					import.meta.env.VITE_BACK_URL
-				}/api/usuarios/olvide-password/${token}`,
+			const { data } = await clienteAxios.post(
+				`/usuarios/olvide-password/${token}`,
 				{
 					password,
 				},

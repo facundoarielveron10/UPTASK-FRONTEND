@@ -1,7 +1,7 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
@@ -46,8 +46,8 @@ export default function OlvidePassword() {
 
 		// ENVIAR DATOS
 		try {
-			const { data } = await axios.post(
-				`${import.meta.env.VITE_BACK_URL}/api/usuarios/olvide-password`,
+			const { data } = await clienteAxios.post(
+				'/usuarios/olvide-password',
 				{
 					email,
 				},
@@ -60,7 +60,7 @@ export default function OlvidePassword() {
 				setSubmit(false);
 				setEmail('');
 				setAlerta({ msg: '', error: false });
-			}, 4000);
+			}, 6000);
 		} catch (error) {
 			// Mostramos el error
 			setAlerta({ msg: error.response.data.msg, error: true });

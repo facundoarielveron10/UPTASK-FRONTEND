@@ -1,7 +1,7 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import clienteAxios from '../config/ClienteAxios';
 import Input from '../components/Input';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
@@ -89,14 +89,11 @@ export default function Registrar() {
 
 		// ENVIAR LOS DATOS
 		try {
-			const { data } = await axios.post(
-				`${import.meta.env.VITE_BACK_URL}/api/usuarios`,
-				{
-					nombre,
-					email,
-					password,
-				},
-			);
+			const { data } = await clienteAxios.post('/usuarios', {
+				nombre,
+				email,
+				password,
+			});
 			setAlerta({ msg: data.msg, error: false });
 			setTimeout(() => {
 				setErrores({

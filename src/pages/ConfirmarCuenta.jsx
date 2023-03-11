@@ -1,7 +1,7 @@
 // ---- IMPORTACIONES ---- //
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
 
@@ -21,10 +21,9 @@ export default function ConfirmarCuenta() {
 	useEffect(() => {
 		const confirmarCuenta = async () => {
 			try {
-				const url = `${
-					import.meta.env.VITE_BACK_URL
-				}/api/usuarios/confirmar/${id}`;
-				const { data } = await axios(url);
+				const { data } = await clienteAxios(
+					`/usuarios/confirmar/${id}`,
+				);
 				setAlerta({ msg: data.msg, error: false });
 				setCuentaConfirmada(true);
 			} catch (error) {
