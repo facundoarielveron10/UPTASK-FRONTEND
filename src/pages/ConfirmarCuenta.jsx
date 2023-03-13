@@ -5,7 +5,7 @@ import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
 
-// ---- COMPONENTE (CONFIRMAR CUENTA) ---- //
+// ---- PAGINA (CONFIRMAR CUENTA) ---- //
 export default function ConfirmarCuenta() {
 	// ---- ESTADOS ---- //
 	const [alerta, setAlerta] = useState({ msg: '', error: false });

@@ -6,7 +6,7 @@ import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
-// ---- COMPONENTE (OLVIDE PASSWORD) ---- //
+// ---- PAGINA (OLVIDE PASSWORD) ---- //
 export default function OlvidePassword() {
 	// ---- ESTADOS ---- //
 	const [email, setEmail] = useState('');

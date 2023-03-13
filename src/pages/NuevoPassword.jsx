@@ -1,12 +1,12 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
-// ---- COMPONENTE (NUEVO PASSWORD) ---- //
+// ---- PAGINA (NUEVO PASSWORD) ---- //
 export default function NuevoPassword() {
 	// ---- ESTADOS ---- //
 	const [password, setPassword] = useState('');
@@ -20,6 +20,10 @@ export default function NuevoPassword() {
 	});
 	const [alerta, setAlerta] = useState({ msg: '', error: false });
 	const [tokenValido, setTokenValido] = useState(false);
+	// ---- ---- ---- ---- //
+
+	// ---- NAVEGACION ---- //
+	const navigate = useNavigate();
 	// ---- ---- ---- ---- //
 
 	// ---- TOKEN (URL) ---- //
@@ -104,7 +108,7 @@ export default function NuevoPassword() {
 			);
 			setAlerta({ msg: data.msg, error: false });
 			setTimeout(() => {
-				window.location = '/';
+				navigate('/');
 			}, 4000);
 		} catch (error) {
 			// Mostramos el error

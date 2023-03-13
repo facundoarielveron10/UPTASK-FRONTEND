@@ -6,7 +6,7 @@ import Input from '../components/Input';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
 
-// ---- COMPONENTE (REGISTRO DE USUARIO) ---- //
+// ---- PAGINA (REGISTRO DE USUARIO) ---- //
 export default function Registrar() {
 	// ---- ESTADOS ---- //
 	const [nombre, setNombre] = useState('');

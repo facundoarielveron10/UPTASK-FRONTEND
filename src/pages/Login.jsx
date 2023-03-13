@@ -1,13 +1,22 @@
 // ---- IMPORTACIONES ---- //
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+import { Link, useNavigate } from 'react-router-dom';
 import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
 import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
-// ---- COMPONENTE (INICIO DE SESION) ---- //
+// ---- PAGINA (INICIO DE SESION) ---- //
 export default function Login() {
+	// ---- CONTEXTs ---- //
+	const { setAuth } = useAuth();
+	// ---- ---- ---- ---- //
+
+	// ---- NAVEGACION ---- //
+	const navigate = useNavigate();
+	// ---- ---- ---- ---- //
+
 	// ---- ESTADOS ---- //
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -67,6 +76,8 @@ export default function Login() {
 			setAlerta({ msg: '', error: false });
 			setSubmit(false);
 			localStorage.setItem('token', data.token);
+			setAuth(data);
+			navigate('/proyectos');
 		} catch (error) {
 			// Mostramos el error
 			setAlerta({ msg: error.response.data.msg, error: true });
@@ -110,7 +121,6 @@ export default function Login() {
 					htmlFor={'password'}
 					type={'password'}
 					errores={errores.passwordUsuario}
-					igualdad={errores.igualdadPassword}
 					submit={submit}
 					error={alerta}
 				/>
