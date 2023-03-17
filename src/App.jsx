@@ -9,6 +9,7 @@ import NuevoPassword from './pages/NuevoPassword';
 import ConfirmarCuenta from './pages/ConfirmarCuenta';
 import Proyectos from './pages/Proyectos';
 import RutaProtegida from './layouts/RutaProtegida';
+import NuevoProyecto from './pages/NuevoProyecto';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (APLICACION PRINCIPAL) ---- //
@@ -44,6 +45,10 @@ function App() {
 					{/* AREA PRIVADA */}
 					<Route path="/proyectos" element={<RutaProtegida />}>
 						<Route index element={<Proyectos />} />
+						<Route
+							path="crear-proyecto"
+							element={<NuevoProyecto />}
+						/>
 					</Route>
 				</Routes>
 			</AuthProvider>
