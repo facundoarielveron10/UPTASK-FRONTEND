@@ -8,8 +8,6 @@ export default function Proyectos() {
 	const { proyectos } = useProyectos();
 	// ---- ---- ---- ---- //
 
-	console.log(proyectos);
-
 	return (
 		<div>
 			<h1 className="text-4xl font-black text-gray-500">Proyectos</h1>
