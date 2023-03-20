@@ -2,7 +2,7 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
+import Menu from '../components/Menu';
 // ---- ---- ---- ---- ---- //
 
 // ---- LAYOUT (RUTA PROTEGIDA) ---- //
@@ -14,15 +14,15 @@ export default function RutaProtegida() {
 	return (
 		<>
 			{auth._id ? (
-				<div>
+				<div className="mb-36">
 					<Header />
 
-					<div className="md:flex md:min-h-screen">
-						<Sidebar />
+					<main className="p-5 md:p-10">
+						<Outlet />
+					</main>
 
-						<main className="ml-28 p-10 flex-1">
-							<Outlet />
-						</main>
+					<div className="flex justify-center md:mt-7">
+						<Menu />
 					</div>
 				</div>
 			) : (

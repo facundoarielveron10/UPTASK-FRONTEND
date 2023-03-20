@@ -1,5 +1,6 @@
 // ---- IMPORTACIONES ---- //
 import { AuthProvider } from './context/AuthProvider';
+import { ProyectosProvider } from './context/ProyectosProvider';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AuthLayout from './layouts/AuthLayout';
 import Login from './pages/Login';
@@ -17,40 +18,42 @@ function App() {
 	return (
 		<BrowserRouter>
 			<AuthProvider>
-				{/* RUTAS */}
-				<Routes>
-					{/* AREA PUBLICA */}
-					<Route path="/" element={<AuthLayout />}>
-						{/* INICIO DE SESION */}
-						<Route index element={<Login />} />
-						{/* REGISTRARSE */}
-						<Route path="registrar" element={<Registrar />} />
-						{/* OLVIDE MI PASSWORD */}
-						<Route
-							path="olvide-password"
-							element={<OlvidePassword />}
-						/>
-						{/* REESTABLECER PASSWORD */}
-						<Route
-							path="olvide-password/:token"
-							element={<NuevoPassword />}
-						/>
-						{/* CONFIRMAR CUENTA */}
-						<Route
-							path="confirmar/:id"
-							element={<ConfirmarCuenta />}
-						/>
-					</Route>
+				<ProyectosProvider>
+					{/* RUTAS */}
+					<Routes>
+						{/* AREA PUBLICA */}
+						<Route path="/" element={<AuthLayout />}>
+							{/* INICIO DE SESION */}
+							<Route index element={<Login />} />
+							{/* REGISTRARSE */}
+							<Route path="registrar" element={<Registrar />} />
+							{/* OLVIDE MI PASSWORD */}
+							<Route
+								path="olvide-password"
+								element={<OlvidePassword />}
+							/>
+							{/* REESTABLECER PASSWORD */}
+							<Route
+								path="olvide-password/:token"
+								element={<NuevoPassword />}
+							/>
+							{/* CONFIRMAR CUENTA */}
+							<Route
+								path="confirmar/:id"
+								element={<ConfirmarCuenta />}
+							/>
+						</Route>
 
-					{/* AREA PRIVADA */}
-					<Route path="/proyectos" element={<RutaProtegida />}>
-						<Route index element={<Proyectos />} />
-						<Route
-							path="crear-proyecto"
-							element={<NuevoProyecto />}
-						/>
-					</Route>
-				</Routes>
+						{/* AREA PRIVADA */}
+						<Route path="/proyectos" element={<RutaProtegida />}>
+							<Route index element={<Proyectos />} />
+							<Route
+								path="crear-proyecto"
+								element={<NuevoProyecto />}
+							/>
+						</Route>
+					</Routes>
+				</ProyectosProvider>
 			</AuthProvider>
 		</BrowserRouter>
 	);
