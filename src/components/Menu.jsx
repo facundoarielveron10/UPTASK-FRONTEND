@@ -1,29 +1,72 @@
 // ---- IMPORTACIONES ---- //
 import { Link } from 'react-router-dom';
-import { AiOutlinePlus } from 'react-icons/ai';
-import { CiEdit } from 'react-icons/ci';
-import { MdOutlineAccountCircle } from 'react-icons/md';
+import { IoHammerOutline } from 'react-icons/io5';
+import { FiEdit2 } from 'react-icons/fi';
+import { VscTools } from 'react-icons/vsc';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (Menu) ---- //
 export default function Menu() {
-	return (
-		<div className="fixed bottom-0 w-1/2 md:w-1/4 lg:w-1/6 bg-[#090909] border-[3px] border-sky-600 hover:border-teal-500 transition-colors duration-300 rounded-2xl p-4 mb-10 shadow-2xl">
-			<div className="flex justify-between">
-				<Link
-					className="text-sky-600 hover:text-teal-500 transition-colors duration-300"
-					to="crear-proyecto"
-				>
-					<AiOutlinePlus fontSize={35} />
-				</Link>
-				<Link
-					className="text-sky-600 hover:text-teal-500 transition-colors duration-300"
-					to="crear-proyecto"
-				>
-					<CiEdit fontSize={35} />
-				</Link>
-			</div>
-		</div>
-	);
+    return (
+        <div className="bg-[#090909] border-t-[3px] border-sky-500 pt-4 hover:border-teal-500 transition-all duration-300">
+            {/* Menu */}
+            <div className="flex flex-col items-center justify-center">
+                {/* Enlace (Crear Proyecto) */}
+                <div className="flex justify-between items-center bg-[#090909] w-full text-sky-600 hover:text-teal-500 transition-colors duration-300">
+                    {/* Icono (Crear) */}
+                    <div className="ml-10">
+                        <IoHammerOutline fontSize={35} />
+                    </div>
+                    {/* Enlace (Crear Proyecto) */}
+                    <Link
+                        className="flex items-center font-bold uppercase my-4"
+                        to="crear-proyecto"
+                    >
+                        Crear Proyecto
+                    </Link>
+                    {/* Icono (Crear) */}
+                    <div className="mr-10">
+                        <IoHammerOutline fontSize={35} />
+                    </div>
+                </div>
+                {/* Enlace (Editar Proyecto) */}
+                <div className="flex justify-between items-center bg-[#090909] w-full text-sky-600 hover:text-teal-500 transition-colors duration-300">
+                    {/* Icono (Editar) */}
+                    <div className="ml-10">
+                        <FiEdit2 fontSize={35} />
+                    </div>
+                    {/* Enlace (Editar Proyecto) */}
+                    <Link
+                        className="flex items-center font-bold uppercase my-4 text-sky-600 hover:text-teal-500 transition-colors duration-300"
+                        to="crear-proyecto"
+                    >
+                        Editar Proyecto
+                    </Link>
+                    {/* Icono (Crear) */}
+                    <div className="mr-10">
+                        <FiEdit2 fontSize={35} />
+                    </div>
+                </div>
+                {/* Enlace (Configuracion) */}
+                <div className="flex justify-between items-center bg-[#090909] w-full text-sky-600 hover:text-teal-500 transition-colors duration-300">
+                    {/* Icono (Configuracion) */}
+                    <div className="ml-10">
+                        <VscTools fontSize={35} />
+                    </div>
+                    {/* Enlace (Configuracion) */}
+                    <Link
+                        className="flex items-center font-bold uppercase my-4 text-sky-600 hover:text-teal-500 transition-colors duration-300"
+                        to="crear-proyecto"
+                    >
+                        Configuracion
+                    </Link>
+                    {/* Icono (Editar) */}
+                    <div className="mr-10">
+                        <VscTools fontSize={35} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 // ---- ---- ---- ---- ---- ---- //
