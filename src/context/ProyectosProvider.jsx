@@ -7,79 +7,81 @@ import clienteAxios from '../config/ClienteAxios';
 const ProyectosContext = createContext();
 
 const ProyectosProvider = ({ children }) => {
-	// ---- FUNCIONES ---- //
-	const submitProyecto = async proyecto => {
-		// ENVIAR DATOS A LA API
-		try {
-			const token = localStorage.getItem('token');
-			if (!token) return;
+    // ---- ESTADOS ---- //
+    const [proyectos, setProyectos] = useState([]);
+    const [alerta, setAlerta] = useState({ msg: '', error: false });
+    const [creado, setCreado] = useState(false);
+    // ---- ---- ---- ---- //
 
-			const config = {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-			};
+    // ---- FUNCIONES ---- //
+    const submitProyecto = async (proyecto) => {
+        // ENVIAR DATOS A LA API
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
 
-			const { data } = await clienteAxios.post(
-				'/proyectos',
-				proyecto,
-				config,
-			);
-			setAlerta({ msg: 'Proyecto creado correctamente', error: false });
-			setCreado(true);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
 
-	const proyectosUsuario = async () => {
-		try {
-			const token = localStorage.getItem('token');
-			if (!token) return;
+            const { data } = await clienteAxios.post(
+                '/proyectos',
+                proyecto,
+                config
+            );
+            setAlerta({ msg: 'Proyecto creado correctamente', error: false });
+            setCreado(true);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    // ---- ---- ---- ---- //
 
-			const config = {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-			};
+    // ---- EFECTOS ---- //
+    useEffect(() => {
+        const proyectosUsuario = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
 
-			// TRAER TODOS LOS PROYECTOS DEL USUARIO
-			const { data } = await clienteAxios.get('/proyectos', config);
-			setProyectos(data);
-		} catch (error) {
-			console.log(error);
-		}
-	};
-	// ---- ---- ---- ---- //
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                };
 
-	// ---- ESTADOS ---- //
-	const [proyectos, setProyectos] = useState(proyectosUsuario());
-	const [alerta, setAlerta] = useState({ msg: '', error: false });
-	const [creado, setCreado] = useState(false);
-	// ---- ---- ---- ---- //
+                // TRAER TODOS LOS PROYECTOS DEL USUARIO
+                const { data } = await clienteAxios.get('/proyectos', config);
+                setProyectos(data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
 
-	// ---- EFECTOS ---- //
-	useEffect(() => {
-		proyectosUsuario();
-	}, []);
-	// ---- ---- ---- ---- //
+        return () => {
+            proyectosUsuario();
+        };
+    }, []);
+    // ---- ---- ---- ---- //
 
-	return (
-		<ProyectosContext.Provider
-			value={{
-				proyectos,
-				alerta,
-				setAlerta,
-				submitProyecto,
-				creado,
-				setCreado,
-			}}
-		>
-			{children}
-		</ProyectosContext.Provider>
-	);
+    return (
+        <ProyectosContext.Provider
+            value={{
+                proyectos,
+                alerta,
+                setAlerta,
+                submitProyecto,
+                creado,
+                setCreado,
+            }}
+        >
+            {children}
+        </ProyectosContext.Provider>
+    );
 };
 // ---- ---- ---- ---- ---- ---- //
 

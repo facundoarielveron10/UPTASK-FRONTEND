@@ -11,52 +11,54 @@ import ConfirmarCuenta from './pages/ConfirmarCuenta';
 import Proyectos from './pages/Proyectos';
 import RutaProtegida from './layouts/RutaProtegida';
 import NuevoProyecto from './pages/NuevoProyecto';
+import Proyecto from './pages/Proyecto';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (APLICACION PRINCIPAL) ---- //
 function App() {
-	return (
-		<BrowserRouter>
-			<AuthProvider>
-				<ProyectosProvider>
-					{/* RUTAS */}
-					<Routes>
-						{/* AREA PUBLICA */}
-						<Route path="/" element={<AuthLayout />}>
-							{/* INICIO DE SESION */}
-							<Route index element={<Login />} />
-							{/* REGISTRARSE */}
-							<Route path="registrar" element={<Registrar />} />
-							{/* OLVIDE MI PASSWORD */}
-							<Route
-								path="olvide-password"
-								element={<OlvidePassword />}
-							/>
-							{/* REESTABLECER PASSWORD */}
-							<Route
-								path="olvide-password/:token"
-								element={<NuevoPassword />}
-							/>
-							{/* CONFIRMAR CUENTA */}
-							<Route
-								path="confirmar/:id"
-								element={<ConfirmarCuenta />}
-							/>
-						</Route>
+    return (
+        <BrowserRouter>
+            <AuthProvider>
+                <ProyectosProvider>
+                    {/* RUTAS */}
+                    <Routes>
+                        {/* AREA PUBLICA */}
+                        <Route path="/" element={<AuthLayout />}>
+                            {/* INICIO DE SESION */}
+                            <Route index element={<Login />} />
+                            {/* REGISTRARSE */}
+                            <Route path="registrar" element={<Registrar />} />
+                            {/* OLVIDE MI PASSWORD */}
+                            <Route
+                                path="olvide-password"
+                                element={<OlvidePassword />}
+                            />
+                            {/* REESTABLECER PASSWORD */}
+                            <Route
+                                path="olvide-password/:token"
+                                element={<NuevoPassword />}
+                            />
+                            {/* CONFIRMAR CUENTA */}
+                            <Route
+                                path="confirmar/:id"
+                                element={<ConfirmarCuenta />}
+                            />
+                        </Route>
 
-						{/* AREA PRIVADA */}
-						<Route path="/proyectos" element={<RutaProtegida />}>
-							<Route index element={<Proyectos />} />
-							<Route
-								path="crear-proyecto"
-								element={<NuevoProyecto />}
-							/>
-						</Route>
-					</Routes>
-				</ProyectosProvider>
-			</AuthProvider>
-		</BrowserRouter>
-	);
+                        {/* AREA PRIVADA */}
+                        <Route path="/proyectos" element={<RutaProtegida />}>
+                            <Route index element={<Proyectos />} />
+                            <Route
+                                path="crear-proyecto"
+                                element={<NuevoProyecto />}
+                            />
+                            <Route path=":id" element={<Proyecto />} />
+                        </Route>
+                    </Routes>
+                </ProyectosProvider>
+            </AuthProvider>
+        </BrowserRouter>
+    );
 }
 // ---- ---- ---- ---- ---- //
 

@@ -1,4 +1,5 @@
 // ---- IMPORTACIONES ---- //
+import useProyectos from '../hooks/useProyectos';
 import { Link } from 'react-router-dom';
 import { IoHammerOutline } from 'react-icons/io5';
 import { FiEdit2 } from 'react-icons/fi';
@@ -6,9 +7,19 @@ import { VscTools } from 'react-icons/vsc';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (Menu) ---- //
-export default function Menu() {
+export default function Menu({ pathname }) {
+    // ---- CONTEXTs ---- //
+    const { proyectos } = useProyectos();
+    // ---- ---- ---- ---- //
+
     return (
-        <div className="bg-[#090909] border-t-[3px] border-sky-500 pt-4 hover:border-teal-500 transition-all duration-300">
+        <div
+            className={`${
+                (pathname === '/proyectos') & (proyectos.length === 0)
+                    ? 'fixed bottom-0 w-full'
+                    : ''
+            } bg-[#090909] border-t-[3px] border-sky-500 pt-4 hover:border-teal-500 transition-all duration-300`}
+        >
             {/* Menu */}
             <div className="flex flex-col items-center justify-center">
                 {/* Enlace (Crear Proyecto) */}

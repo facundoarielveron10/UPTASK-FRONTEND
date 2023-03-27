@@ -1,6 +1,6 @@
 // ---- IMPORTACIONES ---- //
 import { useState } from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import Header from '../components/Header';
 import Hamburger from 'hamburger-react';
@@ -9,11 +9,16 @@ import Menu from '../components/Menu';
 
 // ---- LAYOUT (RUTA PROTEGIDA) ---- //
 export default function RutaProtegida() {
+    // ---- PATHNAME ---- //
+    const { pathname } = useLocation();
+    // ---- ---- ---- ---- //
+
     // ---- CONTEXT ---- //
     const { auth, cargando } = useAuth();
     const [menu, setMenu] = useState(false);
     // ---- ---- ---- ---- //
     if (cargando) return 'Cargando...';
+
     return (
         <>
             {auth._id ? (
@@ -30,7 +35,7 @@ export default function RutaProtegida() {
                         </div>
                     </div>
 
-                    {menu && <Menu />}
+                    {menu && <Menu pathname={pathname} />}
                 </>
             ) : (
                 <Navigate to="/" />
