@@ -10,7 +10,7 @@ export default function NuevoProyecto() {
 				Crear Proyecto
 			</h1>
 
-			<div className="mt-10 flex justify-center">
+			<div className="mt-10 flex justify-center mb-14">
 				<FormularioProyecto />
 			</div>
 		</div>
