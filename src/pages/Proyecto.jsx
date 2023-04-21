@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
-import { formatearFecha } from '../helpers/funciones.js';
+import { formatearFecha } from '../helpers/utilities';
 import Spinner from '../components/Spinner';
 // ---- ---- ---- ---- ---- //
 
