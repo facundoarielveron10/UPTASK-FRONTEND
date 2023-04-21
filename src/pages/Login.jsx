@@ -77,7 +77,7 @@ export default function Login() {
 			setSubmit(false);
 			localStorage.setItem('token', data.token);
 			setAuth(data);
-			navigate('/proyectos');
+			window.location.assign('/proyectos');
 		} catch (error) {
 			// Mostramos el error
 			setAlerta({ msg: error.response.data.msg, error: true });

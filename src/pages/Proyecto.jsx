@@ -21,6 +21,31 @@ export default function Proyecto() {
 		};
 	}, []);
 	// ---- ---- ---- ---- //
-	return <div>Hola: </div>;
+
+	// ---- DATOS ---- //
+	const {
+		cliente,
+		descripcion,
+		fechaEntrega,
+		nombre,
+		updatedAt,
+		createdAt,
+		colaboradores,
+	} = proyecto;
+	// ---- ----- ---- //
+	return proyecto ? (
+		<div>
+			{/* Nombre y Cliente */}
+			<div className="p-5 sm:p-7 md:p-10">
+				<h1 className="text-gray-300 text-4xl sm:text-5xl md:text-6xl font-black">
+					{nombre}
+				</h1>
+				<h2 className="mt-2 text-gray-400 text-xl sm:text-2xl md:text-3xl font-bold">
+					{cliente}
+				</h2>
+			</div>
+			{/* Informacion */}
+		</div>
+	) : null;
 }
 // ---- ---- ---- ---- ---- ---- //
