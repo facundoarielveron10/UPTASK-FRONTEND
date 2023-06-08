@@ -1,171 +1,213 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
 import Alerta from '../components/Alerta';
-import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (FORMULARIO CREACION DE PROYECTOS) ---- //
 export default function FormularioProyecto() {
-	// ---- CONTEXTs ---- //
-	const { alerta, submitProyecto, setAlerta, creado, setCreado } =
-		useProyectos();
-	// ---- ---- ---- ---- //
+    // ---- CONTEXTs ---- //
+    const { mostrarAlerta, alerta, submitProyecto, proyecto } = useProyectos();
+    // ---- ---- ---- ---- //
 
-	// ---- NAVEGACION ---- //
-	const navigate = useNavigate();
-	// ---- ---- ---- ---- //
+    // ---- ID ---- //
+    const { id } = useParams();
+    // ---- ---- ---- //
 
-	// ---- ESTADOS ---- //
-	const [nombre, setNombre] = useState('');
-	const [descripcion, setDescripcion] = useState('');
-	const [fechaEntrega, setFechaEntrega] = useState('');
-	const [cliente, setCliente] = useState('');
-	const [submit, setSubmit] = useState(false);
-	const [errores, setErrores] = useState({
-		nombreFormulario: false,
-		descripcionFormulario: false,
-		fechaEntregaFormulario: false,
-		clienteFormulario: false,
-	});
-	// ---- ---- ---- ---- //
+    // ---- ESTADOS ---- //
+    const [nombre, setNombre] = useState('');
+    const [descripcion, setDescripcion] = useState('');
+    const [fechaEntrega, setFechaEntrega] = useState('');
+    const [cliente, setCliente] = useState('');
+    // ---- ---- ---- ---- //
 
-	// ---- EFECTOS ---- //
-	useEffect(() => {
-		// ERRORES DE VALIDACION
-		const error = {
-			nombreFormulario: false,
-			descripcionFormulario: false,
-			fechaEntregaFormulario: false,
-			clienteFormulario: false,
-		};
+    // ---- EFECTOS ---- //
+    useEffect(() => {
+        // ERRORES DE VALIDACION
+        if (id) {
+            setNombre(proyecto.nombre);
+            setDescripcion(proyecto.descripcion);
+            setFechaEntrega(proyecto.fechaEntrega?.split('T')[0]);
+            setCliente(proyecto.cliente);
+        }
+    }, [id]);
+    // ---- ---- ---- ---- //
 
-		// VALIDACIONES DE CAMPOS REQUERIDO
-		[nombre].includes('') & !creado
-			? (error.nombreFormulario = true)
-			: (error.nombreFormulario = false);
+    // ---- ---- ---- ---- //
 
-		[descripcion].includes('') & !creado
-			? (error.descripcionFormulario = true)
-			: (error.descripcionFormulario = false);
+    // ---- FUNCIONES ---- //
+    const handleSubmit = async (e) => {
+        // VALIDACION DEL FORMULARIO
+        e.preventDefault();
 
-		[fechaEntrega].includes('') & !creado
-			? (error.fechaEntregaFormulario = true)
-			: (error.fechaEntregaFormulario = false);
+        // VERIFICAMOS QUE NO HAYA ERRORES
+        if ([nombre, descripcion, fechaEntrega, cliente].includes('')) {
+            mostrarAlerta({
+                msg: 'Todos los Campos son Obligatorios',
+                error: true,
+            });
 
-		[cliente].includes('') & !creado
-			? (error.clienteFormulario = true)
-			: (error.clienteFormulario = false);
+            return;
+        }
 
-		setErrores(error);
-	}, [nombre, descripcion, fechaEntrega, cliente]);
-	// ---- ---- ---- ---- //
+        // PASAR DATOS AL PROVIDER
+        await submitProyecto({
+            nombre,
+            descripcion,
+            fechaEntrega,
+            cliente,
+        });
 
-	// ---- ---- ---- ---- //
+        setAlerta({});
+        setNombre('');
+        setDescripcion('');
+        setFechaEntrega('');
+        setCliente('');
+    };
+    // ---- ---- ---- ---- //
 
-	// ---- FUNCIONES ---- //
-	const handleSubmit = async e => {
-		// VALIDACION DEL FORMULARIO
-		e.preventDefault();
-		setSubmit(true);
+    // ---- MENSAJE DE ALERTA ---- //
+    const { msg } = alerta;
+    // ---- ---- ---- ---- ---- ---- //
 
-		// VERIFICAMOS QUE NO HAYA ERRORES
-		let errorUsuario = false;
-		Object.values(errores).map(error => {
-			if (error === true) {
-				errorUsuario = true;
-			}
-		});
-		if (errorUsuario) {
-			return;
-		}
+    return (
+        <div className="flex flex-col gap-8 justify-center items-center w-full">
+            {/* Alerta */}
+            {msg && <Alerta alerta={alerta} />}
 
-		// PASAR DATOS AL PROVIDER
-		await submitProyecto({ nombre, descripcion, fechaEntrega, cliente });
+            <form
+                className={`border ${
+                    alerta.error ? 'border-red-500' : 'border-[#080808]'
+                } flex flex-col gap-4 bg-[#0e0e0e] shadow-2xl shadow-[#080808] py-10 px-5 w-full md:w-2/3 xl:w-1/2 rounded-lg`}
+                onSubmit={handleSubmit}
+            >
+                {/* Nombre del Proyecto */}
+                <div>
+                    {/* Texto Ayuda */}
+                    <label
+                        className={`${
+                            alerta.error & [nombre].includes('')
+                                ? 'text-red-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        htmlFor="nombre"
+                    >
+                        Nombre del Proyecto
+                    </label>
+                    {/* Nombre */}
+                    <input
+                        className={`border-[3px] ${
+                            alerta.error & [nombre].includes('')
+                                ? 'border-red-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+                        type="text"
+                        id="nombre"
+                        placeholder="Nombre del Proyecto"
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
+                    />
+                </div>
 
-		setNombre('');
-		setDescripcion('');
-		setFechaEntrega('');
-		setCliente('');
+                {/* Descripcion del Proyecto */}
+                <div>
+                    {/* Texto Ayuda */}
+                    <label
+                        className={`${
+                            alerta.error & [descripcion].includes('')
+                                ? 'text-red-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        htmlFor="descripcion"
+                    >
+                        <span>Descripcion del Proyecto</span>
+                    </label>
+                    {/* Descripcion */}
+                    <textarea
+                        className={`border-[3px] ${
+                            alerta.error & [descripcion].includes('')
+                                ? 'border-red-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+                        id="descripcion"
+                        placeholder="Descripcion del Proyecto"
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                    />
+                </div>
 
-		setTimeout(() => {
-			setSubmit(false);
-			setAlerta({ msg: '', error: false });
-			setCreado(false);
-			navigate('/proyectos');
-		}, 4000);
-	};
-	// ---- ---- ---- ---- //
+                {/* Fecha de Entrega del Proyecto */}
+                <div>
+                    {/* Texto Ayuda */}
+                    <label
+                        className={`${
+                            alerta.error & [fechaEntrega].includes('')
+                                ? 'text-red-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        htmlFor="fecha-entrega"
+                    >
+                        <span>Fecha de Entrega del Proyecto</span>
+                    </label>
+                    {/* Fecha Entrega */}
+                    <input
+                        className={`border-[3px] ${
+                            alerta.error & [fechaEntrega].includes('')
+                                ? 'border-red-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+                        type="date"
+                        id="fecha-entrega"
+                        placeholder="Fecha de Entrega del Proyecto"
+                        value={fechaEntrega}
+                        onChange={(e) => setFechaEntrega(e.target.value)}
+                    />
+                </div>
 
-	return (
-		<div className="flex flex-col gap-8 justify-center items-center w-full">
-			{/* Alerta */}
-			{![alerta.msg].includes('') ? (
-				<Alerta mensaje={alerta.msg} error={alerta.error} />
-			) : null}
+                {/* Nombre del Cliente del Proyecto */}
+                <div>
+                    {/* Texto Ayuda */}
+                    <label
+                        className={`${
+                            alerta.error & [cliente].includes('')
+                                ? 'text-red-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        htmlFor="cliente"
+                    >
+                        <span>Cliente del Proyecto</span>
+                    </label>
+                    {/* Cliente */}
+                    <input
+                        className={`border-[3px] ${
+                            alerta.error & [cliente].includes('')
+                                ? 'border-red-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+                        type="text"
+                        id="cliente"
+                        placeholder="Cliente del Proyecto"
+                        value={cliente}
+                        onChange={(e) => setCliente(e.target.value)}
+                    />
+                </div>
 
-			<form
-				className="bg-[#0e0e0e] border border-[#080808] shadow-2xl shadow-[#080808] py-10 px-5 w-full md:w-2/3 xl:w-1/2 rounded-lg"
-				onSubmit={handleSubmit}
-			>
-				{/* Nombre */}
-				<Input
-					dato={nombre}
-					setDato={setNombre}
-					placeholder="Nombre del Proyecto"
-					label={'Nombre'}
-					htmlFor={'nombre'}
-					type={'text'}
-					errores={errores.nombreFormulario}
-					submit={submit}
-					error={alerta}
-				/>
-				{/* Desceripcion */}
-				<Input
-					dato={descripcion}
-					setDato={setDescripcion}
-					placeholder="Descripcion del Proyecto"
-					label={'Descripcion'}
-					htmlFor={'descripcion'}
-					type={'text'}
-					errores={errores.descripcionFormulario}
-					submit={submit}
-					error={alerta}
-				/>
-				{/* Fecha Entrega */}
-				<Input
-					dato={fechaEntrega}
-					setDato={setFechaEntrega}
-					placeholder="Fecha de Entrega del Proyecto"
-					label={'Fecha de Entrega'}
-					htmlFor={'fecha-entrega'}
-					type={'date'}
-					errores={errores.fechaEntregaFormulario}
-					submit={submit}
-					error={alerta}
-				/>
-				{/* Cliente */}
-				<Input
-					dato={cliente}
-					setDato={setCliente}
-					placeholder="Cliente del Proyecto"
-					label={'Cliente'}
-					htmlFor={'cliente'}
-					type={'text'}
-					errores={errores.clienteFormulario}
-					submit={submit}
-					error={alerta}
-				/>
-
-				{/* Boton Enviar */}
-				<input
-					className="bg-sky-700 hover:bg-teal-500 cursor-pointer text-gray-50 w-full py-3 mt-3 uppercase font-bold rounded-xl transition-colors duration-300"
-					type="submit"
-					value="Crear Proyecto"
-				/>
-			</form>
-		</div>
-	);
+                {/* Boton Enviar */}
+                <input
+                    className={`${
+                        alerta.error &
+                        [nombre, descripcion, fechaEntrega, cliente].includes(
+                            ''
+                        )
+                            ? 'bg-red-500'
+                            : 'bg-sky-700 hover:bg-teal-500'
+                    } cursor-pointer text-gray-50 w-full py-3 mt-3 uppercase font-bold rounded-xl transition-colors duration-300`}
+                    type="submit"
+                    value="Crear Proyecto"
+                />
+            </form>
+        </div>
+    );
 }
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- ---- //

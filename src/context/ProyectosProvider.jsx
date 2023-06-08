@@ -16,6 +16,10 @@ const ProyectosProvider = ({ children }) => {
     // ---- ---- ---- ---- //
 
     // ---- FUNCIONES ---- //
+    const mostrarAlerta = (alerta) => {
+        setAlerta(alerta);
+    };
+
     const submitProyecto = async (proyecto) => {
         // ENVIAR DATOS A LA API
         try {
@@ -96,6 +100,7 @@ const ProyectosProvider = ({ children }) => {
         <ProyectosContext.Provider
             value={{
                 proyectos,
+                mostrarAlerta,
                 alerta,
                 setAlerta,
                 submitProyecto,
