@@ -22,6 +22,50 @@ const ProyectosProvider = ({ children }) => {
 
     const submitProyecto = async (proyecto) => {
         // ENVIAR DATOS A LA API
+        if (proyecto.id) {
+            await editarProyecto(proyecto);
+        } else {
+            await nuevoProyecto(proyecto);
+        }
+    };
+
+    const editarProyecto = async (proyecto) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await clienteAxios.put(
+                `/proyectos/${proyecto.id}`,
+                proyecto,
+                config
+            );
+
+            // Sincronizamos el State
+            const proyectosActualizados = proyectos.map((proyectoState) =>
+                proyectoState._id === data._id ? data : proyectoState
+            );
+            setProyectos(proyectosActualizados);
+
+            // Mostramos la alerta
+            setCreado(true);
+
+            setTimeout(() => {
+                setCreado(false);
+                window.location.assign(`/proyectos/${proyecto.id}`);
+            }, 4000);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const nuevoProyecto = async (proyecto) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return;
@@ -39,8 +83,12 @@ const ProyectosProvider = ({ children }) => {
                 config
             );
             setProyectos([...proyectos, data]);
-            setAlerta({ msg: 'Proyecto creado correctamente', error: false });
             setCreado(true);
+
+            setTimeout(() => {
+                setCreado(false);
+                window.location.assign('/proyectos');
+            }, 4000);
         } catch (error) {
             console.log(error);
         }

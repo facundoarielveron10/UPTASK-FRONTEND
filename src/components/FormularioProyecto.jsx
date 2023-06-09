@@ -1,6 +1,6 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
@@ -8,7 +8,15 @@ import Alerta from '../components/Alerta';
 // ---- COMPONENTE (FORMULARIO CREACION DE PROYECTOS) ---- //
 export default function FormularioProyecto() {
     // ---- CONTEXTs ---- //
-    const { mostrarAlerta, alerta, submitProyecto, proyecto } = useProyectos();
+    const {
+        mostrarAlerta,
+        alerta,
+        submitProyecto,
+        proyecto,
+        setAlerta,
+        creado,
+        cargando,
+    } = useProyectos();
     // ---- ---- ---- ---- //
 
     // ---- ID ---- //
@@ -24,7 +32,7 @@ export default function FormularioProyecto() {
 
     // ---- EFECTOS ---- //
     useEffect(() => {
-        // ERRORES DE VALIDACION
+        // COMPLETAR FORMULARIO PARA EDITAR
         if (id) {
             setNombre(proyecto.nombre);
             setDescripcion(proyecto.descripcion);
@@ -53,6 +61,7 @@ export default function FormularioProyecto() {
 
         // PASAR DATOS AL PROVIDER
         await submitProyecto({
+            id,
             nombre,
             descripcion,
             fechaEntrega,
@@ -67,19 +76,23 @@ export default function FormularioProyecto() {
     };
     // ---- ---- ---- ---- //
 
-    // ---- MENSAJE DE ALERTA ---- //
-    const { msg } = alerta;
-    // ---- ---- ---- ---- ---- ---- //
-
     return (
         <div className="flex flex-col gap-8 justify-center items-center w-full">
-            {/* Alerta */}
-            {msg && <Alerta alerta={alerta} />}
+            {/* Alerta Error */}
+            {alerta.error &
+            [nombre, descripcion, fechaEntrega, cliente].includes('') ? (
+                <Alerta alerta={alerta} />
+            ) : null}
 
             <form
-                className={`border ${
-                    alerta.error ? 'border-red-500' : 'border-[#080808]'
-                } flex flex-col gap-4 bg-[#0e0e0e] shadow-2xl shadow-[#080808] py-10 px-5 w-full md:w-2/3 xl:w-1/2 rounded-lg`}
+                className={`${
+                    creado ? 'border-teal-500' : 'border-[#080808]'
+                } border ${
+                    alerta.error &
+                    [nombre, descripcion, fechaEntrega, cliente].includes('')
+                        ? 'border-red-500'
+                        : 'border-[#080808]'
+                } transition-colors duration-300 flex flex-col gap-4 bg-[#0e0e0e] shadow-2xl shadow-[#080808] py-10 px-5 w-full md:w-2/3 xl:w-1/2 rounded-lg`}
                 onSubmit={handleSubmit}
             >
                 {/* Nombre del Proyecto */}
@@ -87,17 +100,25 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
+                            creado
+                                ? 'text-teal-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } ${
                             alerta.error & [nombre].includes('')
                                 ? 'text-red-500'
                                 : 'text-gray-50 hover:text-teal-500'
-                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="nombre"
                     >
                         Nombre del Proyecto
                     </label>
                     {/* Nombre */}
                     <input
-                        className={`border-[3px] ${
+                        className={` ${
+                            creado
+                                ? 'border-teal-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } border-[3px] ${
                             alerta.error & [nombre].includes('')
                                 ? 'border-red-500'
                                 : 'border-gray-900 hover:border-teal-500'
@@ -115,17 +136,25 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
+                            creado
+                                ? 'text-teal-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } ${
                             alerta.error & [descripcion].includes('')
                                 ? 'text-red-500'
                                 : 'text-gray-50 hover:text-teal-500'
-                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="descripcion"
                     >
                         <span>Descripcion del Proyecto</span>
                     </label>
                     {/* Descripcion */}
                     <textarea
-                        className={`border-[3px] ${
+                        className={`${
+                            creado
+                                ? 'border-teal-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } border-[3px] ${
                             alerta.error & [descripcion].includes('')
                                 ? 'border-red-500'
                                 : 'border-gray-900 hover:border-teal-500'
@@ -142,17 +171,25 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
+                            creado
+                                ? 'text-teal-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } ${
                             alerta.error & [fechaEntrega].includes('')
                                 ? 'text-red-500'
                                 : 'text-gray-50 hover:text-teal-500'
-                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="fecha-entrega"
                     >
                         <span>Fecha de Entrega del Proyecto</span>
                     </label>
                     {/* Fecha Entrega */}
                     <input
-                        className={`border-[3px] ${
+                        className={`${
+                            creado
+                                ? 'border-teal-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } border-[3px] ${
                             alerta.error & [fechaEntrega].includes('')
                                 ? 'border-red-500'
                                 : 'border-gray-900 hover:border-teal-500'
@@ -170,17 +207,25 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
+                            creado
+                                ? 'text-teal-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } ${
                             alerta.error & [cliente].includes('')
                                 ? 'text-red-500'
                                 : 'text-gray-50 hover:text-teal-500'
-                        } uppercase flex justify-between items-center text-xl font-bold `}
+                        } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="cliente"
                     >
                         <span>Cliente del Proyecto</span>
                     </label>
                     {/* Cliente */}
                     <input
-                        className={`border-[3px] ${
+                        className={`${
+                            creado
+                                ? 'border-teal-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } border-[3px] ${
                             alerta.error & [cliente].includes('')
                                 ? 'border-red-500'
                                 : 'border-gray-900 hover:border-teal-500'
@@ -204,7 +249,7 @@ export default function FormularioProyecto() {
                             : 'bg-sky-700 hover:bg-teal-500'
                     } cursor-pointer text-gray-50 w-full py-3 mt-3 uppercase font-bold rounded-xl transition-colors duration-300`}
                     type="submit"
-                    value="Crear Proyecto"
+                    value={`${id ? 'Editar Proyecto' : 'Crear Proyecto'}`}
                 />
             </form>
         </div>
