@@ -10,55 +10,27 @@ import Input from '../components/Input';
 // ---- PAGINA (INICIO DE SESION) ---- //
 export default function Login() {
     // ---- CONTEXTs ---- //
-    const { setAuth } = useAuth();
+    const { setAuth, mostrarAlerta, alerta, setAlerta } = useAuth();
     // ---- ---- ---- ---- //
 
     // ---- ESTADOS ---- //
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [submit, setSubmit] = useState(false);
-    const [errores, setErrores] = useState({
-        emailUsuario: false,
-        passwordUsuario: false,
-    });
-    const [alerta, setAlerta] = useState({ msg: '', error: false });
-    // ---- ---- ---- ---- //
-
-    // ---- EFECTOS ---- //
-    useEffect(() => {
-        // ERRORES DE VALIDACION
-        const error = {
-            emailUsuario: false,
-            passwordUsuario: false,
-        };
-
-        // VALIDACIONES DE CAMPOS REQUERIDO
-        [email].includes('')
-            ? (error.emailUsuario = true)
-            : (error.emailUsuario = false);
-
-        [password].includes('')
-            ? (error.passwordUsuario = true)
-            : (error.passwordUsuario = false);
-
-        setErrores(error);
-    }, [email, password]);
+    const [error, setError] = useState(false);
     // ---- ---- ---- ---- //
 
     // ---- FUNCIONES ---- //
     const handleSubmit = async (e) => {
         // VALIDACION DEL FORMULARIO
         e.preventDefault();
-        setSubmit(true);
 
         // VERIFICAMOS QUE NO HAYA ERRORES
-        let errorUsuario = false;
-        Object.values(errores).map((error) => {
-            if (error === true) {
-                errorUsuario = true;
-            }
-        });
-        if (errorUsuario) {
+        if ([email, password].includes('')) {
+            mostrarAlerta({
+                msg: 'Todos los Campos son Obligatorios',
+                error: true,
+            });
+
             return;
         }
 
@@ -68,15 +40,17 @@ export default function Login() {
                 email,
                 password,
             });
-            setErrores({ emailUsuario: false, passwordUsuario: false });
             setAlerta({ msg: '', error: false });
-            setSubmit(false);
             localStorage.setItem('token', data.token);
             setAuth(data);
             window.location.assign('/proyectos');
         } catch (error) {
             // Mostramos el error
-            setAlerta({ msg: error.response.data.msg, error: true });
+            mostrarAlerta({
+                msg: error.response.data.msg,
+                error: true,
+            });
+            setError(true);
         }
     };
     // ---- ---- ---- ---- //
@@ -89,41 +63,84 @@ export default function Login() {
                 <span className="text-slate-700">proyectos</span>
             </h1>
 
-            {/* Alerta */}
-            {![alerta.msg].includes('') ? (
-                <Alerta mensaje={alerta.msg} error={alerta.error} />
+            {/* Alerta Error */}
+            {alerta.error & [email, password].includes('') ||
+            alerta.error & error ? (
+                <Alerta alerta={alerta} />
             ) : null}
 
             {/* Formulario */}
-            <form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>
-                {/* Email */}
-                <Input
-                    dato={email}
-                    setDato={setEmail}
-                    placeholder="¿Pondrias tu Email?"
-                    label={'Email'}
-                    htmlFor={'email'}
-                    type={'email'}
-                    errores={errores.emailUsuario}
-                    submit={submit}
-                    error={alerta}
-                />
-                {/* Password */}
-                <Input
-                    dato={password}
-                    setDato={setPassword}
-                    placeholder="¿Pondrias tu Contraseña?"
-                    label={'Contraseña'}
-                    htmlFor={'password'}
-                    type={'password'}
-                    errores={errores.passwordUsuario}
-                    submit={submit}
-                    error={alerta}
-                />
+            <form
+                className="flex flex-col gap-4 shadow rounded-lg"
+                onSubmit={handleSubmit}
+            >
+                {/* Email del Usuario */}
+                <div>
+                    {/* Texto Ayuda */}
+                    <label
+                        className={`${
+                            alerta.error & [email].includes('') ||
+                            alerta.error & error
+                                ? 'text-red-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
+                        htmlFor="email"
+                    >
+                        Tu Email
+                    </label>
+                    {/* Email */}
+                    <input
+                        className={`border-[3px] ${
+                            alerta.error & [email].includes('') ||
+                            alerta.error & error
+                                ? 'border-red-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+                        type="email"
+                        id="email"
+                        placeholder="¿Pondrias tu Email?"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                </div>
+                {/* Password del Usuario */}
+                <div>
+                    {/* Texto Ayuda */}
+                    <label
+                        className={`${
+                            alerta.error & [password].includes('') ||
+                            alerta.error & error
+                                ? 'text-red-500'
+                                : 'text-gray-50 hover:text-teal-500'
+                        } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
+                        htmlFor="password"
+                    >
+                        Tu Password
+                    </label>
+                    {/* Password */}
+                    <input
+                        className={`border-[3px] ${
+                            alerta.error & [password].includes('') ||
+                            alerta.error & error
+                                ? 'border-red-500'
+                                : 'border-gray-900 hover:border-teal-500'
+                        } w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+                        type="password"
+                        id="passwoord"
+                        placeholder="¿Pondrias tu Contraseña?"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
 
                 {/* Boton Enviar */}
                 <input
-                    className="bg-sky-700 hover:bg-teal-500 cursor-pointer text-gray-50 w-full py-3 uppercase font-bold rounded-xl transition-colors duration-300"
+                    className={`${
+                        alerta.error & [email, password].includes('') ||
+                        alerta.error & error
+                            ? 'bg-red-500'
+                            : 'bg-sky-700 hover:bg-teal-500'
+                    } cursor-pointer text-gray-50 w-full py-3 mt-3 uppercase font-bold rounded-xl transition-colors duration-300`}
                     type="submit"
                     value="Iniciar Sesion"
                 />

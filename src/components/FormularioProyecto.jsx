@@ -15,7 +15,6 @@ export default function FormularioProyecto() {
         proyecto,
         setAlerta,
         creado,
-        cargando,
     } = useProyectos();
     // ---- ---- ---- ---- //
 
@@ -68,7 +67,7 @@ export default function FormularioProyecto() {
             cliente,
         });
 
-        setAlerta({});
+        setAlerta({ msg: '', error: false });
         setNombre('');
         setDescripcion('');
         setFechaEntrega('');
@@ -162,6 +161,7 @@ export default function FormularioProyecto() {
                         id="descripcion"
                         placeholder="Descripcion del Proyecto"
                         value={descripcion}
+                        rows={4}
                         onChange={(e) => setDescripcion(e.target.value)}
                     />
                 </div>

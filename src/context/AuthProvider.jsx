@@ -10,11 +10,8 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
     // ---- ESTADOS ---- //
     const [auth, setAuth] = useState({});
+    const [alerta, setAlerta] = useState({ msg: '', error: false });
     const [cargando, setCargando] = useState(true);
-    // ---- ---- ---- ---- //
-
-    // ---- NAVEGACION ---- //
-    const navigate = useNavigate();
     // ---- ---- ---- ---- //
 
     // ---- EFECTOS ---- //
@@ -40,7 +37,6 @@ const AuthProvider = ({ children }) => {
             try {
                 const { data } = await clienteAxios('usuarios/perfil', config);
                 setAuth(data);
-                // navigate('/proyectos');
             } catch (error) {
                 setAuth({});
             }
@@ -52,11 +48,25 @@ const AuthProvider = ({ children }) => {
             autenticarUsuario();
         };
     }, []);
+    // ---- ---- ---- ---- //
 
+    // ---- FUNCIONES ---- //
+    const mostrarAlerta = (alerta) => {
+        setAlerta(alerta);
+    };
     // ---- ---- ---- ---- //
 
     return (
-        <AuthContext.Provider value={{ setAuth, auth, cargando }}>
+        <AuthContext.Provider
+            value={{
+                setAuth,
+                auth,
+                mostrarAlerta,
+                alerta,
+                setAlerta,
+                cargando,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );
