@@ -27,6 +27,12 @@ export default function EditarProyecto() {
     }, []);
     // ---- ---- ---- ---- //
 
+    // ---- FUNCIONES ---- //
+    const handleDelete = () => {
+        console.log('eliminar');
+    };
+    // ---- ---- ---- ---- //
+
     // ---- DATOS ---- //
     const { nombre } = proyecto;
     // ---- ---- ---- //
@@ -36,8 +42,7 @@ export default function EditarProyecto() {
     ) : (
         <>
             {/* Titulo, Fecha de creacion y actualizacion */}
-            <div className="flex justify-between items-center">
-                {/* Nombre e informacion del proyecto */}
+            <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
                 {/* Nombre del Proyecto a Editar */}
                 <h1 className="flex flex-col text-gray-300 text-3xl sm:text-4xl md:text-5xl font-black">
                     <span className="text-sky-500">Editar Proyecto:</span>{' '}
@@ -53,14 +58,17 @@ export default function EditarProyecto() {
                         <BsInfoLg fontSize={25} />
                     </Link>
 
-                    <Link className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1">
+                    <Link
+                        onClick={handleDelete}
+                        className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
+                    >
                         <FiTrash2 fontSize={25} />
                     </Link>
                 </div>
             </div>
 
             {/* Formulario de edicion */}
-            <div className="mt-10 flex justify-center mb-14">
+            <div className="flex justify-center mb-14">
                 <FormularioProyecto />
             </div>
         </>

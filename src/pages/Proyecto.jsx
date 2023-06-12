@@ -58,7 +58,7 @@ export default function Proyecto() {
                         </span>
                     </h1>
                     {/* Acciones del Proyecto */}
-                    <div className="flex items-center gap-4">
+                    <div className="sm:flex items-center gap-4 hidden">
                         <Link
                             className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
                             to={`/proyectos/editar/${id}`}
@@ -74,10 +74,27 @@ export default function Proyecto() {
                         </Link>
                     </div>
                 </div>
-
+                {/* Cliente del Proyecto */}
                 <h2 className="text-sky-600 text-xl sm:text-2xl md:text-3xl font-black">
                     {cliente}
                 </h2>
+
+                {/* Acciones del Proyecto */}
+                <div className="sm:hidden items-center gap-4 flex mt-4">
+                    <Link
+                        className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
+                        to={`/proyectos/editar/${id}`}
+                    >
+                        <FiEdit2 fontSize={25} />
+                    </Link>
+
+                    <Link
+                        className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
+                        to={``}
+                    >
+                        <FiTrash2 fontSize={25} />
+                    </Link>
+                </div>
             </div>
             {/* Descripcion y Jerarquias */}
             <div className="p-5 sm:p-7 md:p-10">
