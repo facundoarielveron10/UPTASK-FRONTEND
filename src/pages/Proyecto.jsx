@@ -66,7 +66,10 @@ export default function Proyecto() {
                             <FiEdit2 fontSize={25} />
                         </Link>
 
-                        <Link className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1">
+                        <Link
+                            className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
+                            to={``}
+                        >
                             <FiTrash2 fontSize={25} />
                         </Link>
                     </div>

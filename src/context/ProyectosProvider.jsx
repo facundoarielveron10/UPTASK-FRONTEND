@@ -59,7 +59,7 @@ const ProyectosProvider = ({ children }) => {
             setTimeout(() => {
                 setCreado(false);
                 window.location.assign(`/proyectos/${proyecto.id}`);
-            }, 4000);
+            }, 1500);
         } catch (error) {
             console.log(error);
         }
@@ -88,7 +88,7 @@ const ProyectosProvider = ({ children }) => {
             setTimeout(() => {
                 setCreado(false);
                 window.location.assign('/proyectos');
-            }, 4000);
+            }, 1500);
         } catch (error) {
             console.log(error);
         }

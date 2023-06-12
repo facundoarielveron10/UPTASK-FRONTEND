@@ -1,6 +1,6 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
@@ -39,6 +39,10 @@ export default function FormularioProyecto() {
             setCliente(proyecto.cliente);
         }
     }, [id]);
+
+    useEffect(() => {
+        setAlerta({ msg: '', error: false });
+    }, []);
     // ---- ---- ---- ---- //
 
     // ---- ---- ---- ---- //
@@ -78,10 +82,12 @@ export default function FormularioProyecto() {
     return (
         <div className="flex flex-col gap-8 justify-center items-center w-full">
             {/* Alerta Error */}
-            {alerta.error &
-            [nombre, descripcion, fechaEntrega, cliente].includes('') ? (
-                <Alerta alerta={alerta} />
-            ) : null}
+            <div className="h-10">
+                {alerta.error &
+                [nombre, descripcion, fechaEntrega, cliente].includes('') ? (
+                    <Alerta alerta={alerta} />
+                ) : null}
+            </div>
 
             <form
                 className={`${
@@ -99,13 +105,11 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado
-                                ? 'text-teal-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                            creado ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [nombre].includes('')
                                 ? 'text-red-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                                : 'text-gray-50'
                         } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="nombre"
                     >
@@ -135,13 +139,11 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado
-                                ? 'text-teal-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                            creado ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [descripcion].includes('')
                                 ? 'text-red-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                                : 'text-gray-50'
                         } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="descripcion"
                     >
@@ -171,13 +173,11 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado
-                                ? 'text-teal-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                            creado ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [fechaEntrega].includes('')
                                 ? 'text-red-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                                : 'text-gray-50'
                         } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="fecha-entrega"
                     >
@@ -207,13 +207,11 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado
-                                ? 'text-teal-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                            creado ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [cliente].includes('')
                                 ? 'text-red-500'
-                                : 'text-gray-50 hover:text-teal-500'
+                                : 'text-gray-50'
                         } transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
                         htmlFor="cliente"
                     >
@@ -250,6 +248,7 @@ export default function FormularioProyecto() {
                     } cursor-pointer text-gray-50 w-full py-3 mt-3 uppercase font-bold rounded-xl transition-colors duration-300`}
                     type="submit"
                     value={`${id ? 'Editar Proyecto' : 'Crear Proyecto'}`}
+                    disabled={creado ? true : false}
                 />
             </form>
         </div>
