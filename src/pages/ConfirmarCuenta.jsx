@@ -1,5 +1,6 @@
 // ---- IMPORTACIONES ---- //
 import { useEffect, useState } from 'react';
+import useAuth from '../hooks/useAuth';
 import { useParams, Link } from 'react-router-dom';
 import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
@@ -7,9 +8,13 @@ import Alerta from '../components/Alerta';
 
 // ---- PAGINA (CONFIRMAR CUENTA) ---- //
 export default function ConfirmarCuenta() {
+	// ---- CONTEXTs ---- //
+	const { setAlerta, alerta, mostrarAlerta } = useAuth();
+	// ---- ---- ---- ---- //
+
 	// ---- ESTADOS ---- //
-	const [alerta, setAlerta] = useState({ msg: '', error: false });
 	const [cuentaConfirmada, setCuentaConfirmada] = useState(false);
+	const [error, setError] = useState(false);
 	// ---- ---- ---- ---- //
 
 	// ---- TOKEN (URL) ---- //
@@ -27,7 +32,12 @@ export default function ConfirmarCuenta() {
 				setAlerta({ msg: data.msg, error: false });
 				setCuentaConfirmada(true);
 			} catch (error) {
-				setAlerta({ msg: error.response.data.msg, error: true });
+				// Mostramos el error
+				mostrarAlerta({
+					msg: error.response.data.msg,
+					error: true,
+				});
+				setError(true);
 			}
 		};
 
@@ -45,19 +55,27 @@ export default function ConfirmarCuenta() {
 				<span className="text-slate-700">proyectos</span>
 			</h1>
 
-			{/* Alerta */}
-			{![alerta.msg].includes('') ? (
-				<Alerta mensaje={alerta.msg} error={alerta.error} />
-			) : null}
+			{/* Alerta Error */}
+			<div className="h-10 mt-5">
+				{alerta.error || alerta.error & error ? (
+					<Alerta alerta={alerta} />
+				) : null}
+			</div>
 
 			{/* BOTON INICIAR SESION */}
 			{cuentaConfirmada && (
-				<Link
-					className="flex justify-center m-6 uppercase font-bold text-gray-50 bg-sky-600 border-[3px] border-sky-700 hover:bg-sky-700 hover:border-sky-800 transition-colors duration-300 rounded-lg p-3"
-					to="/"
-				>
-					Iniciar Sesion
-				</Link>
+				<>
+					<div className="bg-gradient-to-br from-sky-500 to-sky-600 text-center p-2 rounded-xl uppercase text-white font-black sm:text-sm text-xs mt-10">
+						Cuenta confirmada correctamente
+					</div>
+
+					<Link
+						className="flex justify-center m-6 uppercase font-bold text-gray-50 bg-sky-600 border-[3px] border-sky-700 hover:bg-sky-700 hover:border-sky-800 transition-colors duration-300 rounded-lg p-3"
+						to="/"
+					>
+						Iniciar Sesion
+					</Link>
+				</>
 			)}
 		</>
 	);

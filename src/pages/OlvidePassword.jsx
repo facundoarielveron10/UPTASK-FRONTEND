@@ -1,46 +1,40 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
+import useAuth from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
-import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (OLVIDE PASSWORD) ---- //
 export default function OlvidePassword() {
-	// ---- ESTADOS ---- //
-	const [email, setEmail] = useState('');
-	const [submit, setSubmit] = useState(false);
-	const [errores, setErrores] = useState({
-		emailUsuario: false,
-	});
-	const [alerta, setAlerta] = useState({ msg: '', error: false });
+	// ---- CONTEXTs ---- //
+	const { mostrarAlerta, alerta, setAlerta } = useAuth();
 	// ---- ---- ---- ---- //
 
 	// ---- EFECTOS ---- //
 	useEffect(() => {
-		// ERRORES DE VALIDACION
-		const error = {
-			emailUsuario: false,
-		};
+		setAlerta({ msg: '', error: false });
+	}, []);
+	// ---- ---- ---- ---- //
 
-		// VALIDACIONES DE CAMPOS REQUERIDO
-		[email].includes('')
-			? (error.emailUsuario = true)
-			: (error.emailUsuario = false);
-
-		setErrores(error);
-	}, [email]);
+	// ---- ESTADOS ---- //
+	const [email, setEmail] = useState('');
+	const [error, setError] = useState(false);
 	// ---- ---- ---- ---- //
 
 	// ---- FUNCIONES ---- //
 	const handleSubmit = async e => {
 		// VALIDACION DEL FORMULARIO
 		e.preventDefault();
-		setSubmit(true);
 
 		// VALIDAMOS QUE NO HAYA ERRORES
-		if (errores.emailUsuario) {
+		if ([email].includes('')) {
+			mostrarAlerta({
+				msg: 'Todos los Campos son Obligatorios',
+				error: true,
+			});
+
 			return;
 		}
 
@@ -52,18 +46,14 @@ export default function OlvidePassword() {
 					email,
 				},
 			);
-			setAlerta({ msg: data.msg, error: false });
-			setTimeout(() => {
-				setErrores({
-					emailUsuario: false,
-				});
-				setSubmit(false);
-				setEmail('');
-				setAlerta({ msg: '', error: false });
-			}, 6000);
+			window.location.assign('/instrucciones');
 		} catch (error) {
 			// Mostramos el error
-			setAlerta({ msg: error.response.data.msg, error: true });
+			mostrarAlerta({
+				msg: error.response.data.msg,
+				error: true,
+			});
+			setError(true);
 		}
 	};
 	// ---- ---- ---- ---- //
@@ -76,25 +66,47 @@ export default function OlvidePassword() {
 				<span className="text-slate-700">proyectos</span>
 			</h1>
 
-			{/* Alerta */}
-			{![alerta.msg].includes('') ? (
-				<Alerta mensaje={alerta.msg} error={alerta.error} />
-			) : null}
+			{/* Alerta Error */}
+			<div className="h-10 mt-5">
+				{alerta.error & [email].includes('') || alerta.error & error ? (
+					<Alerta alerta={alerta} />
+				) : null}
+			</div>
 
 			{/* Formulario */}
-			<form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>
-				{/* Email */}
-				<Input
-					dato={email}
-					setDato={setEmail}
-					placeholder="¿Pondrias tu Email?"
-					label={'Email'}
-					htmlFor={'email'}
-					type={'email'}
-					errores={errores.emailUsuario}
-					submit={submit}
-					error={alerta}
-				/>
+			<form
+				className="flex flex-col gap-4 shadow rounded-lg"
+				onSubmit={handleSubmit}
+			>
+				{/* Email de Recuperacion */}
+				<div>
+					{/* Texto Ayuda */}
+					<label
+						className={`${
+							alerta.error & [email].includes('') ||
+							alerta.error & error
+								? 'text-red-500'
+								: 'text-gray-50 hover:text-teal-500'
+						} transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
+						htmlFor="email"
+					>
+						Tu Email
+					</label>
+					{/* Email */}
+					<input
+						className={`border-[3px] ${
+							alerta.error & [email].includes('') ||
+							alerta.error & error
+								? 'border-red-500'
+								: 'border-gray-900 hover:border-teal-500'
+						} w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+						type="email"
+						id="email"
+						placeholder="¿Pondrias tu Email?"
+						value={email}
+						onChange={e => setEmail(e.target.value)}
+					/>
+				</div>
 
 				{/* Boton Enviar */}
 				<input

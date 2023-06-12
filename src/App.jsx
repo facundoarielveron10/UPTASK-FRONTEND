@@ -13,6 +13,7 @@ import RutaProtegida from './layouts/RutaProtegida';
 import NuevoProyecto from './pages/NuevoProyecto';
 import Proyecto from './pages/Proyecto';
 import EditarProyecto from './pages/EditarProyecto';
+import Instrucciones from './pages/Instrucciones';
 // ---- ---- ---- ---- ---- //
 
 // ---- COMPONENTE (APLICACION PRINCIPAL) ---- //
@@ -29,6 +30,11 @@ function App() {
 							<Route index element={<Login />} />
 							{/* REGISTRARSE */}
 							<Route path="registrar" element={<Registrar />} />
+							{/* INSTRUCCIONES */}
+							<Route
+								path="instrucciones"
+								element={<Instrucciones />}
+							/>
 							{/* OLVIDE MI PASSWORD */}
 							<Route
 								path="olvide-password"

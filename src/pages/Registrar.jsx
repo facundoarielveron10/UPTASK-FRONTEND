@@ -1,89 +1,51 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
+import useAuth from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import clienteAxios from '../config/ClienteAxios';
-import Input from '../components/Input';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (REGISTRO DE USUARIO) ---- //
 export default function Registrar() {
+	// ---- CONTEXTs ---- //
+	const { mostrarAlerta, alerta, setAlerta } = useAuth();
+	// ---- ---- ---- ---- //
+
+	// ---- EFECTOS ---- //
+	useEffect(() => {
+		setAlerta({ msg: '', error: false });
+	}, []);
+	// ---- ---- ---- ---- //
+
 	// ---- ESTADOS ---- //
 	const [nombre, setNombre] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [repetirPassword, setRepetirPassword] = useState('');
-	const [submit, setSubmit] = useState(false);
-	const [errores, setErrores] = useState({
-		nombreUsuario: false,
-		emailUsuario: false,
-		passwordUsuario: false,
-		repetirPasswordUsuario: false,
-		igualdadPassword: false,
-		longitudPassword: false,
-	});
-	const [alerta, setAlerta] = useState({ msg: '', error: false });
-	// ---- ---- ---- ---- //
-
-	// ---- EFECTOS ---- //
-	useEffect(() => {
-		// ERRORES DE VALIDACION
-		const error = {
-			nombreUsuario: false,
-			emailUsuario: false,
-			passwordUsuario: false,
-			repetirPasswordUsuario: false,
-			igualdadPassword: false,
-			longitudPassword: false,
-		};
-
-		// VALIDACIONES DE CAMPOS REQUERIDO
-		[nombre].includes('')
-			? (error.nombreUsuario = true)
-			: (error.nombreUsuario = false);
-
-		[email].includes('')
-			? (error.emailUsuario = true)
-			: (error.emailUsuario = false);
-
-		[password].includes('')
-			? (error.passwordUsuario = true)
-			: (error.passwordUsuario = false);
-
-		[repetirPassword].includes('')
-			? (error.repetirPasswordUsuario = true)
-			: (error.repetirPasswordUsuario = false);
-
-		// VALIDACION DE IGUALDAD EN LOS CAMPOS DE PASSWORD
-		password !== repetirPassword
-			? (error.igualdadPassword = true)
-			: (error.igualdadPassword = false);
-
-		// VALIDACION DE LA LONGITUD DEL PASSWORD
-		if (password.length < 6 || repetirPassword.length < 6) {
-			error.longitudPassword = true;
-		} else {
-			error.longitudPassword = false;
-		}
-
-		setErrores(error);
-	}, [nombre, email, password, repetirPassword]);
-	// ---- ---- ---- ---- //
+	const [error, setError] = useState(false);
 
 	// ---- FUNCIONES ---- //
 	const handleSubmit = async e => {
 		// VALIDACION DEL FORMULARIO
 		e.preventDefault();
-		setSubmit(true);
 
 		// VERIFICAMOS QUE NO HAYA ERRORES
-		let errorUsuario = false;
-		Object.values(errores).map(error => {
-			if (error === true) {
-				errorUsuario = true;
-			}
-		});
-		if (errorUsuario) {
+		if ([nombre, email, password, repetirPassword].includes('')) {
+			mostrarAlerta({
+				msg: 'Todos los Campos son Obligatorios',
+				error: true,
+			});
+
+			return;
+		}
+
+		if (password != repetirPassword) {
+			mostrarAlerta({
+				msg: 'Las contraseñas son distintas',
+				error: true,
+			});
+			setError(true);
 			return;
 		}
 
@@ -94,26 +56,15 @@ export default function Registrar() {
 				email,
 				password,
 			});
-			setAlerta({ msg: data.msg, error: false });
-			setTimeout(() => {
-				setErrores({
-					nombreUsuario: false,
-					emailUsuario: false,
-					passwordUsuario: false,
-					repetirPasswordUsuario: false,
-					igualdadPassword: false,
-					longitudPassword: false,
-				});
-				setSubmit(false);
-				setNombre('');
-				setEmail('');
-				setPassword('');
-				setRepetirPassword('');
-				setAlerta({ msg: '', error: false });
-			}, 4000);
+			setError(false);
+			window.location.assign('/instrucciones');
 		} catch (error) {
 			// Mostramos el error
-			setAlerta({ msg: error.response.data.msg, error: true });
+			mostrarAlerta({
+				msg: error.response.data.msg,
+				error: true,
+			});
+			setError(true);
 		}
 	};
 	// ---- ---- ---- ---- //
@@ -126,63 +77,136 @@ export default function Registrar() {
 				<span className="text-slate-700">proyectos</span>
 			</h1>
 
-			{/* Alerta */}
-			{![alerta.msg].includes('') ? (
-				<Alerta mensaje={alerta.msg} error={alerta.error} />
-			) : null}
+			{/* Alerta Error */}
+			<div className="h-10 mt-5">
+				{alerta.error &
+					[nombre, email, password, repetirPassword].includes('') ||
+				alerta.error & error ? (
+					<Alerta alerta={alerta} />
+				) : null}
+			</div>
 
 			{/* Formulario */}
-			<form className="my-10 shadow rounded-lg" onSubmit={handleSubmit}>
-				{/* Nombre */}
-				<Input
-					dato={nombre}
-					setDato={setNombre}
-					placeholder="¿Pondrias tu Nombre?"
-					label={'Nombre'}
-					htmlFor={'nombre'}
-					type={'text'}
-					errores={errores.nombreUsuario}
-					submit={submit}
-					error={alerta}
-				/>
-				{/* Email */}
-				<Input
-					dato={email}
-					setDato={setEmail}
-					placeholder="¿Pondrias tu Email?"
-					label={'Email'}
-					htmlFor={'email'}
-					type={'email'}
-					errores={errores.emailUsuario}
-					submit={submit}
-					error={alerta}
-				/>
-				{/* Password */}
-				<Input
-					dato={password}
-					setDato={setPassword}
-					placeholder="¿Pondrias tu Contraseña?"
-					label={'Contraseña'}
-					htmlFor={'password'}
-					type={'password'}
-					errores={errores.passwordUsuario}
-					igualdad={errores.igualdadPassword}
-					submit={submit}
-					error={alerta}
-				/>
-				{/* Repetir Password */}
-				<Input
-					dato={repetirPassword}
-					setDato={setRepetirPassword}
-					placeholder="¿Pondrias tu Nueva Contraseña?"
-					label={'Nueva Contraseña'}
-					htmlFor={'password2'}
-					type={'password'}
-					errores={errores.repetirPasswordUsuario}
-					igualdad={errores.igualdadPassword}
-					submit={submit}
-					error={alerta}
-				/>
+			<form
+				className="flex flex-col gap-4 shadow rounded-lg"
+				onSubmit={handleSubmit}
+			>
+				{/* Nombre de Registro */}
+				<div>
+					{/* Texto Ayuda */}
+					<label
+						className={`${
+							alerta.error & [nombre].includes('') ||
+							alerta.error & error
+								? 'text-red-500'
+								: 'text-gray-50 hover:text-teal-500'
+						} transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
+						htmlFor="nombre"
+					>
+						Tu Nombre
+					</label>
+					{/* Nombre */}
+					<input
+						className={`border-[3px] ${
+							alerta.error & [nombre].includes('') ||
+							alerta.error & error
+								? 'border-red-500'
+								: 'border-gray-900 hover:border-teal-500'
+						} w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+						type="text"
+						id="nombre"
+						placeholder="¿Pondrias tu Nombre?"
+						value={nombre}
+						onChange={e => setNombre(e.target.value)}
+					/>
+				</div>
+				{/* Email de Registro */}
+				<div>
+					{/* Texto Ayuda */}
+					<label
+						className={`${
+							alerta.error & [email].includes('') ||
+							alerta.error & error
+								? 'text-red-500'
+								: 'text-gray-50 hover:text-teal-500'
+						} transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
+						htmlFor="email"
+					>
+						Tu Email
+					</label>
+					{/* Email */}
+					<input
+						className={`border-[3px] ${
+							alerta.error & [email].includes('') ||
+							alerta.error & error
+								? 'border-red-500'
+								: 'border-gray-900 hover:border-teal-500'
+						} w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+						type="email"
+						id="email"
+						placeholder="¿Pondrias tu Email?"
+						value={email}
+						onChange={e => setEmail(e.target.value)}
+					/>
+				</div>
+				{/* Password de Registro */}
+				<div>
+					{/* Texto Ayuda */}
+					<label
+						className={`${
+							alerta.error & [password].includes('') ||
+							alerta.error & error
+								? 'text-red-500'
+								: 'text-gray-50 hover:text-teal-500'
+						} transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
+						htmlFor="password"
+					>
+						Tu Password
+					</label>
+					{/* Password */}
+					<input
+						className={`border-[3px] ${
+							alerta.error & [password].includes('') ||
+							alerta.error & error
+								? 'border-red-500'
+								: 'border-gray-900 hover:border-teal-500'
+						} w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+						type="password"
+						id="passwoord"
+						placeholder="¿Pondrias tu Contraseña?"
+						value={password}
+						onChange={e => setPassword(e.target.value)}
+					/>
+				</div>
+				{/* Repetir Password de Registro */}
+				<div>
+					{/* Texto Ayuda */}
+					<label
+						className={`${
+							alerta.error & [repetirPassword].includes('') ||
+							alerta.error & error
+								? 'text-red-500'
+								: 'text-gray-50 hover:text-teal-500'
+						} transition-colors duration-300 uppercase flex justify-between items-center text-xl font-bold `}
+						htmlFor="repetir-password"
+					>
+						Tu Password Nuevamente
+					</label>
+					{/* Password */}
+					<input
+						className={`border-[3px] ${
+							alerta.error & [repetirPassword].includes('') ||
+							alerta.error & error
+								? 'border-red-500'
+								: 'border-gray-900 hover:border-teal-500'
+						} w-full mt-3 p-3 font-bold transition-colors duration-300 rounded-xl bg-gray-800 text-gray-50 focus:border-teal-500`}
+						type="password"
+						id="repetir-passwoord"
+						placeholder="¿Pondrias Repetir tu Contraseña?"
+						value={repetirPassword}
+						onChange={e => setRepetirPassword(e.target.value)}
+					/>
+				</div>
 
 				{/* Boton Enviar */}
 				<input
@@ -190,12 +214,6 @@ export default function Registrar() {
 					type="submit"
 					value="Crear Cuenta"
 				/>
-				{errores.longitudPassword & submit ? (
-					<p className="text-red-500 opacity-70 text-xs font-bold my-3">
-						Aclaracion las contraseñas deben tener al menos 6
-						caracteres
-					</p>
-				) : null}
 			</form>
 
 			{/* Enlaces */}
