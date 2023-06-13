@@ -1,10 +1,9 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
-import Input from '../components/Input';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (NUEVO PASSWORD) ---- //

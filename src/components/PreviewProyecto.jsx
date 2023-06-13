@@ -12,7 +12,7 @@ export default function PreviewProyecto({ proyecto }) {
         <div className="border-b-[3px] border-b-[#090909] last-of-type:border-b-0 p-5 flex flex-col justify-center items-center gap-7 sm:flex-row sm:gap-0">
             <p className="text-lg text-gray-300 font-black flex flex-col justify-center items-center gap-2 sm:flex-row sm:justify-start sm:gap-0 flex-1">
                 {nombre}{' '}
-                <span className="ml-2 text-sm font-bold border select-none border-gray-500 shadow-2xl p-1 rounded-full text-gray-500 uppercase">
+                <span className="ml-2 text-sm font-bold border select-none border-gray-500 p-1 rounded-full text-gray-500 uppercase">
                     {''}
                     {cliente}
                 </span>

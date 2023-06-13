@@ -78,4 +78,18 @@ body::-webkit-scrollbar-thumb:active {
         -webkit-transform: scale(1);
     }
 }
+
+#swal2-html-container {
+    font-weight: 900;
+}
+
+.swal2-popup.swal2-modal {
+    color: #f9fafb;
+    background-color: #101010;
+    border: 2px solid #010101;
+}
+
+.swal2-container.swal2-center.swal2-backdrop-show {
+    background-color: #000000ab;
+}
 /* -------------------------------- */

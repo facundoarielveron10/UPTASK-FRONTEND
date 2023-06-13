@@ -1,6 +1,8 @@
 // ---- IMPORTACIONES ---- //
+import { set } from 'date-fns/esm';
 import { useState, useEffect, createContext } from 'react';
 import clienteAxios from '../config/ClienteAxios';
+import { useNavigate } from 'react-router-dom';
 // ---- ---- ---- ---- ---- //
 
 // ---- CONTEXTs (PROYECTOS) ---- //
@@ -13,6 +15,10 @@ const ProyectosProvider = ({ children }) => {
     const [alerta, setAlerta] = useState({ msg: '', error: false });
     const [creado, setCreado] = useState(false);
     const [cargando, setCargando] = useState(false);
+    // ---- ---- ---- ---- //
+
+    // ---- NAVIGATE ---- //
+    const navigate = useNavigate();
     // ---- ---- ---- ---- //
 
     // ---- FUNCIONES ---- //
@@ -58,7 +64,8 @@ const ProyectosProvider = ({ children }) => {
 
             setTimeout(() => {
                 setCreado(false);
-                window.location.assign(`/proyectos/${proyecto.id}`);
+                setAlerta({ msg: '', error: false });
+                navigate(`/proyectos/${proyecto.id}`);
             }, 1500);
         } catch (error) {
             console.log(error);
@@ -87,7 +94,8 @@ const ProyectosProvider = ({ children }) => {
 
             setTimeout(() => {
                 setCreado(false);
-                window.location.assign('/proyectos');
+                setAlerta({ msg: '', error: false });
+                navigate('/proyectos');
             }, 1500);
         } catch (error) {
             console.log(error);
@@ -110,6 +118,33 @@ const ProyectosProvider = ({ children }) => {
             const { data } = await clienteAxios(`/proyectos/${id}`, config);
             setProyecto(data);
             setCargando(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const eliminarProyecto = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await clienteAxios.delete(
+                `/proyectos/${id}`,
+                config
+            );
+
+            // Sincronizar el state
+            const proyectosActualizados = proyectos.filter(
+                (proyectoState) => proyectoState._id !== id
+            );
+            setProyectos(proyectosActualizados);
         } catch (error) {
             console.log(error);
         }
@@ -157,6 +192,7 @@ const ProyectosProvider = ({ children }) => {
                 obtenerProyecto,
                 proyecto,
                 cargando,
+                eliminarProyecto,
             }}
         >
             {children}

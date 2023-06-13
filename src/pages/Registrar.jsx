@@ -1,6 +1,7 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
 import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
@@ -10,6 +11,10 @@ import Alerta from '../components/Alerta';
 export default function Registrar() {
     // ---- CONTEXTs ---- //
     const { mostrarAlerta, alerta, setAlerta } = useAuth();
+    // ---- ---- ---- ---- //
+
+    // ---- NAVIGATE ---- //
+    const navigate = useNavigate();
     // ---- ---- ---- ---- //
 
     // ---- EFECTOS ---- //
@@ -61,7 +66,7 @@ export default function Registrar() {
             setError(false);
             setExito(true);
             setTimeout(() => {
-                window.location.assign('/instrucciones');
+                navigate('/instrucciones');
             }, 1500);
         } catch (error) {
             // Mostramos el error

@@ -7,12 +7,15 @@ import { FiTrash2 } from 'react-icons/fi';
 import { BsInfoLg } from 'react-icons/bs';
 import Spinner from '../components/Spinner';
 import FormularioProyecto from '../components/FormularioProyecto';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (EDITAR PROYECTO) ---- //
 export default function EditarProyecto() {
     // ---- CONTEXTs ---- //
-    const { obtenerProyecto, proyecto, cargando } = useProyectos();
+    const { obtenerProyecto, proyecto, cargando, eliminarProyecto } =
+        useProyectos();
     // ---- ---- ---- ---- //
 
     // ---- ID ---- //
@@ -27,9 +30,34 @@ export default function EditarProyecto() {
     }, []);
     // ---- ---- ---- ---- //
 
+    // ---- SWEET ALERTA ---- //
+    const MySwal = withReactContent(Swal);
+    // ---- ---- ---- ---- ---- //
+
     // ---- FUNCIONES ---- //
-    const handleDelete = () => {
-        console.log('eliminar');
+    const handleDelete = async () => {
+        await MySwal.fire({
+            title: '¿ESTAS SEGURO?',
+            text: 'ESTAS A PUNTO DE ELIMINAR UN PROYECTO!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI, ELIMINAR!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'ELIMINADO!',
+                    'PROYECTO ELIMINADO CORRECTAMENTE',
+                    'success'
+                ).then((result) => {
+                    eliminarProyecto(id);
+                    if (result.isConfirmed) {
+                        window.location.assign('/proyectos');
+                    }
+                });
+            }
+        });
     };
     // ---- ---- ---- ---- //
 
@@ -58,12 +86,12 @@ export default function EditarProyecto() {
                         <BsInfoLg fontSize={25} />
                     </Link>
 
-                    <Link
+                    <button
                         onClick={handleDelete}
                         className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
                     >
                         <FiTrash2 fontSize={25} />
-                    </Link>
+                    </button>
                 </div>
             </div>
 

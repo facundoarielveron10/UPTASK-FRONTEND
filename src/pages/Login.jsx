@@ -1,8 +1,8 @@
 // ---- IMPORTACIONES ---- //
 import { useState, useEffect } from 'react';
+import clienteAxios from '../config/ClienteAxios';
 import useAuth from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
-import clienteAxios from '../config/ClienteAxios';
 import Alerta from '../components/Alerta';
 // ---- ---- ---- ---- ---- //
 
