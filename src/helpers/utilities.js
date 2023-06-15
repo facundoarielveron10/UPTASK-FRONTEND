@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-// ---- FORMATEAR FECHA ---- //
-const formatearFecha = (fecha) => {
+// ---- FORMATEAR FECHA CON HORA ---- //
+const formatearFechaHora = (fecha) => {
     if (fecha) {
         const date = new Date(fecha);
         const fechaFormateada = format(
@@ -15,6 +15,18 @@ const formatearFecha = (fecha) => {
 };
 // ---- ---- ---- ---- ---- //
 
+// ---- FORMATEAR FECHA ---- //
+const formatearFecha = (fecha) => {
+    if (fecha) {
+        const date = new Date(fecha);
+        const fechaFormateada = format(date, "'El' dd 'de' MMMM 'del' yyyy", {
+            locale: es,
+        });
+        return fechaFormateada;
+    }
+};
+// ---- ---- ---- ---- ---- //
+
 // ---- EXPORTACIONES ---- //
-export { formatearFecha };
+export { formatearFechaHora, formatearFecha };
 // ---- ---- ---- ---- ---- //

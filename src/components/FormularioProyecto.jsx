@@ -71,6 +71,7 @@ export default function FormularioProyecto() {
             cliente,
         });
 
+        // RESETEAMOS TODOS LOS STATES
         setAlerta({ msg: '', error: false });
         setNombre('');
         setDescripcion('');

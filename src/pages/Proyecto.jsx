@@ -1,8 +1,8 @@
 // ---- IMPORTACIONES ---- //
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
-import { formatearFecha } from '../helpers/utilities';
+import { formatearFechaHora } from '../helpers/utilities';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { TbSubtask } from 'react-icons/tb';
 import Swal from 'sweetalert2';
@@ -10,17 +10,19 @@ import withReactContent from 'sweetalert2-react-content';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import ModalTarea from '../components/ModalTarea';
+import Tarea from '../components/Tarea';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (PROYECTO) ---- //
 export default function Proyecto() {
     // ---- CONTEXTs ---- //
-    const { obtenerProyecto, proyecto, cargando, eliminarProyecto } =
-        useProyectos();
-    // ---- ---- ---- ---- //
-
-    // ---- ESTADOS ---- //
-    const [modal, setModal] = useState(false);
+    const {
+        obtenerProyecto,
+        proyecto,
+        cargando,
+        eliminarProyecto,
+        handleModalTarea,
+    } = useProyectos();
     // ---- ---- ---- ---- //
 
     // ---- ID ---- //
@@ -91,10 +93,10 @@ export default function Proyecto() {
                     <h1 className="flex flex-col text-gray-300 text-4xl sm:text-5xl md:text-6xl font-black">
                         {nombre}
                         <span className="opacity-70 text-xs mt-2 md:text-sm text-gray-400 font-black">
-                            Creado {formatearFecha(createdAt)}
+                            Creado {formatearFechaHora(createdAt)}
                         </span>
                         <span className="opacity-70 text-xs flex flex-col md:text-sm text-gray-400 font-black">
-                            Actualizado {formatearFecha(updatedAt)}
+                            Actualizado {formatearFechaHora(updatedAt)}
                         </span>
                     </h1>
                     {/* Acciones del Proyecto */}
@@ -137,7 +139,7 @@ export default function Proyecto() {
                 <button
                     className="flex justify-center items-center text-sm px-5 py-3 w-full sm:w-auto rounded-lg uppercase font-black bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-white text-center mt-5"
                     type="button"
-                    onClick={() => setModal(true)}
+                    onClick={handleModalTarea}
                 >
                     <TbSubtask fontSize={20} />
                     Agregar Tarea
@@ -152,8 +154,27 @@ export default function Proyecto() {
                 <p className="text-gray-300 font-bold py-5">{descripcion}</p>
             </div>
 
+            {/* Tareas */}
+            <div className="p-5 sm:p-7 md:p-10">
+                {/* Titulo */}
+                <h2 className="text-gray-200 font-black uppercase text-lg mt-10">
+                    Tareas del Proyecto
+                </h2>
+                <div className="bg-gray-900 shadow mt-10 rounded-lg">
+                    {proyecto?.tareas?.length ? (
+                        proyecto.tareas?.map((tarea) => (
+                            <Tarea key={tarea._id} tarea={tarea} />
+                        ))
+                    ) : (
+                        <p className="text-center my-5 p-10 uppercase font-black text-gray-50">
+                            No hay tareas en este proyecto
+                        </p>
+                    )}
+                </div>
+            </div>
+
             {/* Modal de Tareas */}
-            <ModalTarea modal={modal} setModal={setModal} />
+            <ModalTarea />
         </div>
     );
 }

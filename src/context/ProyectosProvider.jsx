@@ -15,6 +15,7 @@ const ProyectosProvider = ({ children }) => {
     const [alerta, setAlerta] = useState({ msg: '', error: false });
     const [creado, setCreado] = useState(false);
     const [cargando, setCargando] = useState(false);
+    const [modalTarea, setModalTarea] = useState(false);
     // ---- ---- ---- ---- //
 
     // ---- NAVIGATE ---- //
@@ -149,6 +150,34 @@ const ProyectosProvider = ({ children }) => {
             console.log(error);
         }
     };
+
+    const handleModalTarea = () => {
+        setModalTarea(!modalTarea);
+    };
+
+    const submitTarea = async (tarea) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await clienteAxios.post('/tareas', tarea, config);
+            setCreado(true);
+
+            setTimeout(() => {
+                setCreado(false);
+                setAlerta({ msg: '', error: false });
+            }, 1500);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     // ---- ---- ---- ---- //
 
     // ---- EFECTOS ---- //
@@ -193,6 +222,9 @@ const ProyectosProvider = ({ children }) => {
                 proyecto,
                 cargando,
                 eliminarProyecto,
+                modalTarea,
+                handleModalTarea,
+                submitTarea,
             }}
         >
             {children}
