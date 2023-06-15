@@ -24,7 +24,7 @@ export default function RutaProtegida() {
                         <Outlet />
                     </main>
 
-                    <div className="fixed w-full bottom-0">
+                    <div className="fixed bottom-0 right-0 my-6 mx-16">
                         <Menu />
                     </div>
                 </>

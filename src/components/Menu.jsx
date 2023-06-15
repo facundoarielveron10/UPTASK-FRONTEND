@@ -15,7 +15,7 @@ export default function Menu() {
     return (
         <>
             {/* Boton Hamburguesa */}
-            <div className="flex justify-end mr-16 my-4">
+            <div className="flex">
                 <Tooltip
                     className="transition-all duration-300 bg-teal-500 font-black uppercase"
                     id="crear-proyecto"

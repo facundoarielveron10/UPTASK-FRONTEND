@@ -2,13 +2,13 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
-import { Link } from 'react-router-dom';
 import { FiTrash2 } from 'react-icons/fi';
 import { BsInfoLg } from 'react-icons/bs';
-import Spinner from '../components/Spinner';
-import FormularioProyecto from '../components/FormularioProyecto';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { Link } from 'react-router-dom';
+import Spinner from '../components/Spinner';
+import FormularioProyecto from '../components/FormularioProyecto';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (EDITAR PROYECTO) ---- //

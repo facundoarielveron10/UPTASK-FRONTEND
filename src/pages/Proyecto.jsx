@@ -1,13 +1,15 @@
 // ---- IMPORTACIONES ---- //
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
 import { formatearFecha } from '../helpers/utilities';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
-import Spinner from '../components/Spinner';
+import { TbSubtask } from 'react-icons/tb';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { Link } from 'react-router-dom';
+import Spinner from '../components/Spinner';
+import ModalTarea from '../components/ModalTarea';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (PROYECTO) ---- //
@@ -15,6 +17,10 @@ export default function Proyecto() {
     // ---- CONTEXTs ---- //
     const { obtenerProyecto, proyecto, cargando, eliminarProyecto } =
         useProyectos();
+    // ---- ---- ---- ---- //
+
+    // ---- ESTADOS ---- //
+    const [modal, setModal] = useState(false);
     // ---- ---- ---- ---- //
 
     // ---- ID ---- //
@@ -126,6 +132,16 @@ export default function Proyecto() {
                         <FiTrash2 fontSize={25} />
                     </button>
                 </div>
+
+                {/* Agregar Tareas */}
+                <button
+                    className="flex justify-center items-center text-sm px-5 py-3 w-full sm:w-auto rounded-lg uppercase font-black bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-white text-center mt-5"
+                    type="button"
+                    onClick={() => setModal(true)}
+                >
+                    <TbSubtask fontSize={20} />
+                    Agregar Tarea
+                </button>
             </div>
             {/* Descripcion y Jerarquias */}
             <div className="p-5 sm:p-7 md:p-10">
@@ -135,6 +151,9 @@ export default function Proyecto() {
                 </h2>
                 <p className="text-gray-300 font-bold py-5">{descripcion}</p>
             </div>
+
+            {/* Modal de Tareas */}
+            <ModalTarea modal={modal} setModal={setModal} />
         </div>
     );
 }
