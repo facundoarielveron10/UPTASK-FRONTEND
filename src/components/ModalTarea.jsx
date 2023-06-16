@@ -20,14 +20,35 @@ const ModalFormularioTarea = () => {
         alerta,
         submitTarea,
         creado,
+        tarea,
     } = useProyectos();
     // ---- ---- ---- ---- //
 
     // ---- ESTADOS ---- //
+    const [idTarea, setIdTarea] = useState('');
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [fechaEntrega, setFechaEntrega] = useState('');
     const [prioridad, setPrioridad] = useState('');
+    // ---- ---- ---- ---- //
+
+    // ---- EFECTOS ---- //
+    useEffect(() => {
+        if (tarea?._id) {
+            setIdTarea(tarea._id);
+            setNombre(tarea.nombre);
+            setDescripcion(tarea.descripcion);
+            setFechaEntrega(tarea.fechaEntrega?.split('T')[0]);
+            setPrioridad(tarea.prioridad);
+            return;
+        }
+        setIdTarea('');
+        setNombre('');
+        setDescripcion('');
+        setFechaEntrega('');
+        setPrioridad('');
+    }, [tarea]);
+
     // ---- ---- ---- ---- //
 
     // ---- ID DEL PROYECTO ---- //
@@ -51,12 +72,21 @@ const ModalFormularioTarea = () => {
 
         // PASAR DATOS AL PROVIDER
         await submitTarea({
+            idTarea,
             nombre,
             descripcion,
             fechaEntrega,
             prioridad,
             proyecto: id,
         });
+
+        setTimeout(() => {
+            setIdTarea('');
+            setNombre('');
+            setDescripcion('');
+            setFechaEntrega('');
+            setPrioridad('');
+        }, 1500);
     };
     // ---- ---- ---- ---- //
 
@@ -132,7 +162,9 @@ const ModalFormularioTarea = () => {
                                         as="h3"
                                         className="text-lg leading-6 font-black text-gray-50 uppercase"
                                     >
-                                        Crear Tarea
+                                        {idTarea
+                                            ? 'Editar Tarea'
+                                            : 'Crear Tarea'}
                                     </Dialog.Title>
 
                                     {/* Alerta Error */}
@@ -180,6 +212,7 @@ const ModalFormularioTarea = () => {
                                                 type="text"
                                                 placeholder="Nombre de la Tarea"
                                                 value={nombre}
+                                                disabled={creado ? true : false}
                                                 onChange={(e) =>
                                                     setNombre(e.target.value)
                                                 }
@@ -216,6 +249,8 @@ const ModalFormularioTarea = () => {
                                                 id="descripcion"
                                                 placeholder="Descripcion de la Tarea"
                                                 value={descripcion}
+                                                rows={4}
+                                                disabled={creado ? true : false}
                                                 onChange={(e) =>
                                                     setDescripcion(
                                                         e.target.value
@@ -254,6 +289,7 @@ const ModalFormularioTarea = () => {
                                                 id="fecha-entrega"
                                                 type="date"
                                                 value={fechaEntrega}
+                                                disabled={creado ? true : false}
                                                 onChange={(e) =>
                                                     setFechaEntrega(
                                                         e.target.value
@@ -310,7 +346,11 @@ const ModalFormularioTarea = () => {
                                         <input
                                             className="w-full bg-sky-500 hover:bg-sky-600 transition-colors duration-300 p-3 text-gray-50 uppercase font-black cursor-pointer rounded"
                                             type="submit"
-                                            value="Crear Tarea"
+                                            value={`${
+                                                idTarea
+                                                    ? 'Editar Tarea'
+                                                    : 'Crear Tarea'
+                                            }`}
                                             disabled={creado ? true : false}
                                         />
                                     </form>

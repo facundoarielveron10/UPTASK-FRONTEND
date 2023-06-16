@@ -72,11 +72,13 @@ export default function FormularioProyecto() {
         });
 
         // RESETEAMOS TODOS LOS STATES
-        setAlerta({ msg: '', error: false });
-        setNombre('');
-        setDescripcion('');
-        setFechaEntrega('');
-        setCliente('');
+        setTimeout(() => {
+            setAlerta({ msg: '', error: false });
+            setNombre('');
+            setDescripcion('');
+            setFechaEntrega('');
+            setCliente('');
+        }, 1500);
     };
     // ---- ---- ---- ---- //
 
@@ -131,6 +133,7 @@ export default function FormularioProyecto() {
                         id="nombre"
                         placeholder="Nombre del Proyecto"
                         value={nombre}
+                        disabled={creado ? true : false}
                         onChange={(e) => setNombre(e.target.value)}
                     />
                 </div>
@@ -165,6 +168,7 @@ export default function FormularioProyecto() {
                         placeholder="Descripcion del Proyecto"
                         value={descripcion}
                         rows={4}
+                        disabled={creado ? true : false}
                         onChange={(e) => setDescripcion(e.target.value)}
                     />
                 </div>
@@ -199,6 +203,7 @@ export default function FormularioProyecto() {
                         id="fecha-entrega"
                         placeholder="Fecha de Entrega del Proyecto"
                         value={fechaEntrega}
+                        disabled={creado ? true : false}
                         onChange={(e) => setFechaEntrega(e.target.value)}
                     />
                 </div>
@@ -233,6 +238,7 @@ export default function FormularioProyecto() {
                         id="cliente"
                         placeholder="Cliente del Proyecto"
                         value={cliente}
+                        disabled={creado ? true : false}
                         onChange={(e) => setCliente(e.target.value)}
                     />
                 </div>

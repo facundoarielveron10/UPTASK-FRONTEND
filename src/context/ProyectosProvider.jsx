@@ -16,6 +16,7 @@ const ProyectosProvider = ({ children }) => {
     const [creado, setCreado] = useState(false);
     const [cargando, setCargando] = useState(false);
     const [modalTarea, setModalTarea] = useState(false);
+    const [tarea, setTarea] = useState({});
     // ---- ---- ---- ---- //
 
     // ---- NAVIGATE ---- //
@@ -29,7 +30,7 @@ const ProyectosProvider = ({ children }) => {
 
     const submitProyecto = async (proyecto) => {
         // ENVIAR DATOS A LA API
-        if (proyecto.id) {
+        if (proyecto?.id) {
             await editarProyecto(proyecto);
         } else {
             await nuevoProyecto(proyecto);
@@ -153,9 +154,58 @@ const ProyectosProvider = ({ children }) => {
 
     const handleModalTarea = () => {
         setModalTarea(!modalTarea);
+        setTarea({});
+        setAlerta({ msg: '', error: false });
     };
 
     const submitTarea = async (tarea) => {
+        if (tarea?.idTarea) {
+            await editarTarea(tarea);
+        } else {
+            await nuevaTarea(tarea);
+        }
+    };
+
+    const editarTarea = async (tarea) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await clienteAxios.put(
+                `/tareas/${tarea.idTarea}`,
+                tarea,
+                config
+            );
+
+            // Sincronizamos el State
+            const proyectoActualizado = { ...proyecto };
+            proyectoActualizado.tareas = proyectoActualizado.tareas.map(
+                (tareaState) =>
+                    tareaState._id === data._id ? data : tareaState
+            );
+
+            setProyecto(proyectoActualizado);
+
+            setCreado(true);
+
+            setTimeout(() => {
+                setCreado(false);
+                setAlerta({ msg: '', error: false });
+                setModalTarea(false);
+            }, 1500);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const nuevaTarea = async (tarea) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return;
@@ -168,15 +218,27 @@ const ProyectosProvider = ({ children }) => {
             };
 
             const { data } = await clienteAxios.post('/tareas', tarea, config);
+
+            const proyectoActualizado = { ...proyecto };
+            proyectoActualizado.tareas = [...proyecto.tareas, data];
+
+            setProyecto(proyectoActualizado);
+
             setCreado(true);
 
             setTimeout(() => {
                 setCreado(false);
                 setAlerta({ msg: '', error: false });
+                setModalTarea(false);
             }, 1500);
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const handleEditarTarea = (tarea) => {
+        setTarea(tarea);
+        setModalTarea(true);
     };
     // ---- ---- ---- ---- //
 
@@ -225,6 +287,8 @@ const ProyectosProvider = ({ children }) => {
                 modalTarea,
                 handleModalTarea,
                 submitTarea,
+                handleEditarTarea,
+                tarea,
             }}
         >
             {children}

@@ -18,7 +18,7 @@ const formatearFechaHora = (fecha) => {
 // ---- FORMATEAR FECHA ---- //
 const formatearFecha = (fecha) => {
     if (fecha) {
-        const date = new Date(fecha);
+        const date = new Date(fecha.split('T')[0].split('-'));
         const fechaFormateada = format(date, "'El' dd 'de' MMMM 'del' yyyy", {
             locale: es,
         });

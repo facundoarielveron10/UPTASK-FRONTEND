@@ -7,6 +7,8 @@ import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { TbSubtask } from 'react-icons/tb';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import ModalTarea from '../components/ModalTarea';
@@ -101,16 +103,28 @@ export default function Proyecto() {
                     </h1>
                     {/* Acciones del Proyecto */}
                     <div className="sm:flex items-center gap-4 hidden">
+                        <Tooltip
+                            className="bg-sky-500 font-black uppercase"
+                            id="editar-proyecto"
+                        />
                         <Link
                             className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
                             to={`/proyectos/editar/${id}`}
+                            data-tooltip-id="editar-proyecto"
+                            data-tooltip-content="Editar Proyecto"
                         >
                             <FiEdit2 fontSize={25} />
                         </Link>
 
+                        <Tooltip
+                            className="bg-red-500 font-black uppercase"
+                            id="eliminar-proyecto"
+                        />
                         <button
                             onClick={handleDelete}
                             className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
+                            data-tooltip-id="eliminar-proyecto"
+                            data-tooltip-content="Eliminar Proyecto"
                         >
                             <FiTrash2 fontSize={25} />
                         </button>
@@ -123,14 +137,29 @@ export default function Proyecto() {
 
                 {/* Acciones del Proyecto */}
                 <div className="sm:hidden items-center gap-4 flex mt-4">
+                    <Tooltip
+                        className="bg-sky-500 font-black uppercase"
+                        id="editar-proyecto"
+                    />
                     <Link
                         className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
                         to={`/proyectos/editar/${id}`}
+                        data-tooltip-id="editar-proyecto"
+                        data-tooltip-content="Editar Proyecto"
                     >
                         <FiEdit2 fontSize={25} />
                     </Link>
 
-                    <button className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1">
+                    <Tooltip
+                        className="bg-red-500 font-black uppercase"
+                        id="eliminar-proyecto"
+                    />
+                    <button
+                        onClick={handleDelete}
+                        className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
+                        data-tooltip-id="eliminar-proyecto"
+                        data-tooltip-content="Eliminar Proyecto"
+                    >
                         <FiTrash2 fontSize={25} />
                     </button>
                 </div>
@@ -160,16 +189,18 @@ export default function Proyecto() {
                 <h2 className="text-gray-200 font-black uppercase text-lg mt-10">
                     Tareas del Proyecto
                 </h2>
-                <div className="bg-gray-900 shadow mt-10 rounded-lg">
-                    {proyecto?.tareas?.length ? (
-                        proyecto.tareas?.map((tarea) => (
-                            <Tarea key={tarea._id} tarea={tarea} />
-                        ))
-                    ) : (
-                        <p className="text-center my-5 p-10 uppercase font-black text-gray-50">
-                            No hay tareas en este proyecto
-                        </p>
-                    )}
+                <div className="mt-10">
+                    <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        {proyecto?.tareas?.length ? (
+                            proyecto.tareas?.map((tarea) => (
+                                <Tarea key={tarea._id} tarea={tarea} />
+                            ))
+                        ) : (
+                            <p className="text-center my-5 p-10 uppercase font-black text-gray-50">
+                                No hay tareas en este proyecto
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
