@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
-import { formatearFechaHora } from '../helpers/utilities';
+import { formatearFechaHora, formatearFecha } from '../helpers/utilities';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { TbSubtask } from 'react-icons/tb';
 import Swal from 'sweetalert2';
@@ -87,6 +87,13 @@ export default function Proyecto() {
         <Spinner />
     ) : (
         <div className="select-none">
+            {/* Fecha de Entrega del Proyecto */}
+            <p className="text-gray-300 font-black text-sm uppercase">
+                Fecha de entrega:{' '}
+                <span className="text-sky-500">
+                    {formatearFecha(fechaEntrega)}
+                </span>
+            </p>
             {/* Nombre y Cliente */}
             <div className="p-5 sm:p-7 md:p-10">
                 {/* Titulo, Fecha de creacion y actualizacion */}
