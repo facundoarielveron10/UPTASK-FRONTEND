@@ -30,9 +30,7 @@ export default function EditarProyecto() {
 
     // ---- EFECTOS ---- //
     useEffect(() => {
-        return () => {
-            obtenerProyecto(id);
-        };
+        obtenerProyecto(id);
     }, []);
     // ---- ---- ---- ---- //
 

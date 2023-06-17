@@ -178,7 +178,7 @@ const ProyectosProvider = ({ children }) => {
                 (proyectoState) => proyectoState._id !== id
             );
             setProyectos(proyectosActualizados);
-            window.location.assign('/proyectos');
+            navigate('/proyectos');
         } catch (error) {
             console.log(error);
         }

@@ -41,9 +41,7 @@ export default function Proyecto() {
 
     // ---- EFECTOS ---- //
     useEffect(() => {
-        return () => {
-            obtenerProyecto(id);
-        };
+        obtenerProyecto(id);
     }, []);
     // ---- ---- ---- ---- //
 
