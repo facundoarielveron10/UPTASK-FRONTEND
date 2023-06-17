@@ -1,17 +1,21 @@
 // ---- IMPORTACIONES ---- //
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
-import { formatearFechaHora, formatearFecha } from '../helpers/utilities';
+import {
+    formatearFechaHora,
+    formatearFecha,
+    compararFecha,
+} from '../helpers/utilities';
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { TbSubtask } from 'react-icons/tb';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+import { AiOutlineUser } from 'react-icons/ai';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import ModalTarea from '../components/ModalTarea';
+import ModalUsuario from '../components/ModalUsuario';
 import Tarea from '../components/Tarea';
 // ---- ---- ---- ---- ---- //
 
@@ -22,9 +26,13 @@ export default function Proyecto() {
         obtenerProyecto,
         proyecto,
         cargando,
-        eliminarProyecto,
+        handleDeleteProyecto,
         handleModalTarea,
     } = useProyectos();
+    // ---- ---- ---- ---- //
+
+    // ---- ESTADOS ---- //
+    const [modalUsuario, setModalUsuario] = useState(false);
     // ---- ---- ---- ---- //
 
     // ---- ID ---- //
@@ -37,37 +45,6 @@ export default function Proyecto() {
             obtenerProyecto(id);
         };
     }, []);
-    // ---- ---- ---- ---- //
-
-    // ---- SWEET ALERTA ---- //
-    const MySwal = withReactContent(Swal);
-    // ---- ---- ---- ---- ---- //
-
-    // ---- FUNCIONES ---- //
-    const handleDelete = async () => {
-        await MySwal.fire({
-            title: '¿ESTAS SEGURO?',
-            text: 'ESTAS A PUNTO DE ELIMINAR UN PROYECTO!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'SI, ELIMINAR!',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'ELIMINADO!',
-                    'PROYECTO ELIMINADO CORRECTAMENTE',
-                    'success'
-                ).then(async (result) => {
-                    await eliminarProyecto(id);
-                    if (result.isConfirmed) {
-                        window.location.assign('/proyectos');
-                    }
-                });
-            }
-        });
-    };
     // ---- ---- ---- ---- //
 
     // ---- DATOS ---- //
@@ -92,7 +69,22 @@ export default function Proyecto() {
                 Fecha de entrega:{' '}
                 <span className="text-sky-500">
                     {formatearFecha(fechaEntrega)}
-                </span>
+                </span>{' '}
+                {compararFecha(fechaEntrega) == 1 && (
+                    <span className="block text-green-500">
+                        (A tiempo de entrega)
+                    </span>
+                )}
+                {compararFecha(fechaEntrega) == 2 && (
+                    <span className="block text-red-500">
+                        (No queda mas tiempo)
+                    </span>
+                )}
+                {compararFecha(fechaEntrega) == 3 && (
+                    <span className="block text-orange-500">
+                        (Se entrega hoy)
+                    </span>
+                )}
             </p>
             {/* Nombre y Cliente */}
             <div className="p-5 sm:p-7 md:p-10">
@@ -110,6 +102,62 @@ export default function Proyecto() {
                     </h1>
                     {/* Acciones del Proyecto */}
                     <div className="sm:flex items-center gap-4 hidden">
+                        {/* Editar Proyecto */}
+                        <div className="flex">
+                            <Tooltip
+                                className="bg-sky-500 font-black uppercase"
+                                id="editar-proyecto"
+                            />
+                            <Link
+                                className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
+                                to={`/proyectos/editar/${id}`}
+                                data-tooltip-id="editar-proyecto"
+                                data-tooltip-content="Editar Proyecto"
+                            >
+                                <FiEdit2 fontSize={25} />
+                            </Link>
+                        </div>
+                        {/* Eliminar Proyecto */}
+                        <div>
+                            <Tooltip
+                                className="bg-red-500 font-black uppercase"
+                                id="eliminar-proyecto"
+                            />
+                            <button
+                                onClick={() => handleDeleteProyecto(id, nombre)}
+                                className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
+                                data-tooltip-id="eliminar-proyecto"
+                                data-tooltip-content="Eliminar Proyecto"
+                            >
+                                <FiTrash2 fontSize={25} />
+                            </button>
+                        </div>
+                        {/* Creador del Proyecto */}
+                        <div>
+                            <Tooltip
+                                className="bg-teal-500 font-black uppercase"
+                                id="usuario"
+                            />
+                            <button
+                                className="text-teal-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-teal-500 rounded-lg p-1"
+                                data-tooltip-id="usuario"
+                                data-tooltip-content="Creador del Proyecto"
+                                onClick={() => setModalUsuario(!modalUsuario)}
+                            >
+                                <AiOutlineUser fontSize={25} />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {/* Cliente del Proyecto */}
+                <h2 className="text-sky-600 text-xl sm:text-2xl md:text-3xl font-black">
+                    {cliente}
+                </h2>
+
+                {/* Acciones del Proyecto */}
+                <div className="sm:hidden items-center gap-4 flex mt-4">
+                    {/* Editar Proyecto */}
+                    <div className="flex">
                         <Tooltip
                             className="bg-sky-500 font-black uppercase"
                             id="editar-proyecto"
@@ -122,13 +170,15 @@ export default function Proyecto() {
                         >
                             <FiEdit2 fontSize={25} />
                         </Link>
-
+                    </div>
+                    {/* Eliminar Proyecto */}
+                    <div>
                         <Tooltip
                             className="bg-red-500 font-black uppercase"
                             id="eliminar-proyecto"
                         />
                         <button
-                            onClick={handleDelete}
+                            onClick={() => handleDeleteProyecto(id, nombre)}
                             className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
                             data-tooltip-id="eliminar-proyecto"
                             data-tooltip-content="Eliminar Proyecto"
@@ -136,39 +186,21 @@ export default function Proyecto() {
                             <FiTrash2 fontSize={25} />
                         </button>
                     </div>
-                </div>
-                {/* Cliente del Proyecto */}
-                <h2 className="text-sky-600 text-xl sm:text-2xl md:text-3xl font-black">
-                    {cliente}
-                </h2>
-
-                {/* Acciones del Proyecto */}
-                <div className="sm:hidden items-center gap-4 flex mt-4">
-                    <Tooltip
-                        className="bg-sky-500 font-black uppercase"
-                        id="editar-proyecto"
-                    />
-                    <Link
-                        className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
-                        to={`/proyectos/editar/${id}`}
-                        data-tooltip-id="editar-proyecto"
-                        data-tooltip-content="Editar Proyecto"
-                    >
-                        <FiEdit2 fontSize={25} />
-                    </Link>
-
-                    <Tooltip
-                        className="bg-red-500 font-black uppercase"
-                        id="eliminar-proyecto"
-                    />
-                    <button
-                        onClick={handleDelete}
-                        className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
-                        data-tooltip-id="eliminar-proyecto"
-                        data-tooltip-content="Eliminar Proyecto"
-                    >
-                        <FiTrash2 fontSize={25} />
-                    </button>
+                    {/* Creador del Proyecto */}
+                    <div>
+                        <Tooltip
+                            className="bg-teal-500 font-black uppercase"
+                            id="usuario"
+                        />
+                        <button
+                            className="text-teal-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-teal-500 rounded-lg p-1"
+                            data-tooltip-id="usuario"
+                            data-tooltip-content="Creador del Proyecto"
+                            onClick={() => setModalUsuario(!modalUsuario)}
+                        >
+                            <AiOutlineUser fontSize={25} />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Agregar Tareas */}
@@ -213,6 +245,13 @@ export default function Proyecto() {
 
             {/* Modal de Tareas */}
             <ModalTarea />
+
+            {/* Modal del Creado */}
+            <ModalUsuario
+                modalUsuario={modalUsuario}
+                setModalUsuario={setModalUsuario}
+                creador={creador}
+            />
         </div>
     );
 }

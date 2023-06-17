@@ -3,6 +3,8 @@ import { set } from 'date-fns/esm';
 import { useState, useEffect, createContext } from 'react';
 import clienteAxios from '../config/ClienteAxios';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 // ---- ---- ---- ---- ---- //
 
 // ---- CONTEXTs (PROYECTOS) ---- //
@@ -18,6 +20,11 @@ const ProyectosProvider = ({ children }) => {
     const [modalTarea, setModalTarea] = useState(false);
     const [tarea, setTarea] = useState({});
     // ---- ---- ---- ---- //
+
+    // ---- SWEET ALERTA ---- //
+    const EliminarProyecto = withReactContent(Swal);
+    const EliminarTarea = withReactContent(Swal);
+    // ---- ---- ---- ---- ---- //
 
     // ---- NAVIGATE ---- //
     const navigate = useNavigate();
@@ -125,6 +132,30 @@ const ProyectosProvider = ({ children }) => {
         }
     };
 
+    const handleDeleteProyecto = async (id, nombre) => {
+        await EliminarProyecto.fire({
+            title: '¿ESTAS SEGURO?',
+            text: `ELIMINAR EL PROYECTO: ${nombre.toUpperCase()}`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0ea5e9',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI, ELIMINAR!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'ELIMINADO!',
+                    `EL PROYECTO "${nombre.toUpperCase()}" FUE ELIMINADO`,
+                    'success'
+                ).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await eliminarProyecto(id);
+                    }
+                });
+            }
+        });
+    };
+
     const eliminarProyecto = async (id) => {
         try {
             const token = localStorage.getItem('token');
@@ -147,6 +178,7 @@ const ProyectosProvider = ({ children }) => {
                 (proyectoState) => proyectoState._id !== id
             );
             setProyectos(proyectosActualizados);
+            window.location.assign('/proyectos');
         } catch (error) {
             console.log(error);
         }
@@ -240,6 +272,57 @@ const ProyectosProvider = ({ children }) => {
         setTarea(tarea);
         setModalTarea(true);
     };
+
+    const handleDeleteTarea = async (id, nombre) => {
+        await EliminarTarea.fire({
+            title: '¿ESTAS SEGURO?',
+            text: `ELIMINAR LA TAREA: ${nombre.toUpperCase()}`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#0ea5e9',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'SI, ELIMINAR!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'ELIMINADO!',
+                    `LA TAREA "${nombre.toUpperCase()}" FUE ELIMINADA`,
+                    'success'
+                ).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await eliminarTarea(id);
+                    }
+                });
+            }
+        });
+    };
+
+    const eliminarTarea = async (id) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await clienteAxios.delete(`/tareas/${id}`, config);
+
+            // Sincronizamos el State
+            const proyectoActualizado = { ...proyecto };
+            proyectoActualizado.tareas = proyectoActualizado.tareas.filter(
+                (tareaState) => tareaState._id !== id
+            );
+
+            setProyecto(proyectoActualizado);
+            setTarea({});
+        } catch (error) {
+            console.log(error);
+        }
+    };
     // ---- ---- ---- ---- //
 
     // ---- EFECTOS ---- //
@@ -283,12 +366,13 @@ const ProyectosProvider = ({ children }) => {
                 obtenerProyecto,
                 proyecto,
                 cargando,
-                eliminarProyecto,
+                handleDeleteProyecto,
                 modalTarea,
                 handleModalTarea,
                 submitTarea,
                 handleEditarTarea,
                 tarea,
+                handleDeleteTarea,
             }}
         >
             {children}

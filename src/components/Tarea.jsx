@@ -11,7 +11,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 // ---- COMPONENTE (TAREA) ---- //
 export default function Tarea({ tarea }) {
     // ---- CONTEXTs ---- //
-    const { handleEditarTarea } = useProyectos();
+    const { handleEditarTarea, handleDeleteTarea } = useProyectos();
     // ---- ---- ---- ---- //
 
     // ---- DATOS DE LA TAREA ---- //
@@ -87,6 +87,7 @@ export default function Tarea({ tarea }) {
                         id="eliminar-tarea"
                     />
                     <button
+                        onClick={() => handleDeleteTarea(_id, nombre)}
                         data-tooltip-id="eliminar-tarea"
                         data-tooltip-content="Eliminar Tarea"
                         className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"

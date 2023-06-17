@@ -27,6 +27,26 @@ const formatearFecha = (fecha) => {
 };
 // ---- ---- ---- ---- ---- //
 
+// ---- COMPARAR FECHA DEL TIPO YYYY-MM-DD ---- //
+const compararFecha = (fecha) => {
+    const fechaActual =
+        new Date().getFullYear() +
+        '-' +
+        (new Date().getMonth() + 1).toString().padStart(2, '0') +
+        '-' +
+        new Date().getDate().toString().padStart(2, '0');
+    const fechaEntrega = fecha?.split('T')[0];
+
+    if (fechaEntrega > fechaActual) {
+        return 1;
+    } else if (fechaEntrega < fechaActual) {
+        return 2;
+    } else {
+        return 3;
+    }
+};
+// ---- ---- ---- ---- ---- ---- ---- ---- ---- //
+
 // ---- EXPORTACIONES ---- //
-export { formatearFechaHora, formatearFecha };
+export { formatearFechaHora, formatearFecha, compararFecha };
 // ---- ---- ---- ---- ---- //

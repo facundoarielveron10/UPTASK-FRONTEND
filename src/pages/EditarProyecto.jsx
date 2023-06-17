@@ -1,21 +1,27 @@
 // ---- IMPORTACIONES ---- //
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
 import { FiTrash2 } from 'react-icons/fi';
 import { BsInfoLg } from 'react-icons/bs';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+import { AiOutlineUser } from 'react-icons/ai';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import FormularioProyecto from '../components/FormularioProyecto';
+import ModalUsuario from '../components/ModalUsuario';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (EDITAR PROYECTO) ---- //
 export default function EditarProyecto() {
     // ---- CONTEXTs ---- //
-    const { obtenerProyecto, proyecto, cargando, eliminarProyecto } =
+    const { obtenerProyecto, proyecto, cargando, handleDeleteProyecto } =
         useProyectos();
+    // ---- ---- ---- ---- //
+
+    // ---- ESTADOS ---- //
+    const [modalUsuario, setModalUsuario] = useState(false);
     // ---- ---- ---- ---- //
 
     // ---- ID ---- //
@@ -30,39 +36,8 @@ export default function EditarProyecto() {
     }, []);
     // ---- ---- ---- ---- //
 
-    // ---- SWEET ALERTA ---- //
-    const MySwal = withReactContent(Swal);
-    // ---- ---- ---- ---- ---- //
-
-    // ---- FUNCIONES ---- //
-    const handleDelete = async () => {
-        await MySwal.fire({
-            title: '¿ESTAS SEGURO?',
-            text: 'ESTAS A PUNTO DE ELIMINAR UN PROYECTO!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'SI, ELIMINAR!',
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'ELIMINADO!',
-                    'PROYECTO ELIMINADO CORRECTAMENTE',
-                    'success'
-                ).then((result) => {
-                    eliminarProyecto(id);
-                    if (result.isConfirmed) {
-                        window.location.assign('/proyectos');
-                    }
-                });
-            }
-        });
-    };
-    // ---- ---- ---- ---- //
-
     // ---- DATOS ---- //
-    const { nombre } = proyecto;
+    const { nombre, creador } = proyecto;
     // ---- ---- ---- //
 
     return cargando ? (
@@ -79,19 +54,51 @@ export default function EditarProyecto() {
 
                 {/* Acciones del Proyecto */}
                 <div className="flex items-center gap-4">
-                    <Link
-                        className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
-                        to={`/proyectos/${id}`}
-                    >
-                        <BsInfoLg fontSize={25} />
-                    </Link>
-
-                    <button
-                        onClick={handleDelete}
-                        className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
-                    >
-                        <FiTrash2 fontSize={25} />
-                    </button>
+                    {/* Informacion del Proyecto */}
+                    <div className="flex">
+                        <Tooltip
+                            className="bg-sky-500 font-black uppercase"
+                            id="info-proyecto"
+                        />
+                        <Link
+                            className="text-sky-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-sky-500 rounded-lg p-1"
+                            to={`/proyectos/${id}`}
+                            data-tooltip-id="info-proyecto"
+                            data-tooltip-content="Informacion del Proyecto"
+                        >
+                            <BsInfoLg fontSize={25} />
+                        </Link>
+                    </div>
+                    {/* Eliminar Proyecto */}
+                    <div>
+                        <Tooltip
+                            className="bg-red-500 font-black uppercase"
+                            id="eliminar-proyecto"
+                        />
+                        <button
+                            onClick={() => handleDeleteProyecto(id, nombre)}
+                            className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"
+                            data-tooltip-id="eliminar-proyecto"
+                            data-tooltip-content="Eliminar Proyecto"
+                        >
+                            <FiTrash2 fontSize={25} />
+                        </button>
+                    </div>
+                    {/* Creador del Proyecto */}
+                    <div>
+                        <Tooltip
+                            className="bg-teal-500 font-black uppercase"
+                            id="usuario"
+                        />
+                        <button
+                            className="text-teal-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-teal-500 rounded-lg p-1"
+                            data-tooltip-id="usuario"
+                            data-tooltip-content="Creador del Proyecto"
+                            onClick={() => setModalUsuario(!modalUsuario)}
+                        >
+                            <AiOutlineUser fontSize={25} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -99,6 +106,13 @@ export default function EditarProyecto() {
             <div className="flex justify-center mb-14">
                 <FormularioProyecto />
             </div>
+
+            {/* Modal del Creado */}
+            <ModalUsuario
+                modalUsuario={modalUsuario}
+                setModalUsuario={setModalUsuario}
+                creador={creador}
+            />
         </>
     );
 }
