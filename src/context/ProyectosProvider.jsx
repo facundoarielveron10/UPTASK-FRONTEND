@@ -15,7 +15,8 @@ const ProyectosProvider = ({ children }) => {
     const [proyectos, setProyectos] = useState([]);
     const [proyecto, setProyecto] = useState({});
     const [alerta, setAlerta] = useState({ msg: '', error: false });
-    const [creado, setCreado] = useState(false);
+    const [exito, setExito] = useState(false);
+    const [error, setError] = useState(false);
     const [cargando, setCargando] = useState(false);
     const [modalTarea, setModalTarea] = useState(false);
     const [tarea, setTarea] = useState({});
@@ -69,10 +70,10 @@ const ProyectosProvider = ({ children }) => {
             setProyectos(proyectosActualizados);
 
             // Mostramos la alerta
-            setCreado(true);
+            setExito(true);
 
             setTimeout(() => {
-                setCreado(false);
+                setExito(false);
                 setAlerta({ msg: '', error: false });
                 navigate(`/proyectos/${proyecto.id}`);
             }, 1500);
@@ -99,10 +100,10 @@ const ProyectosProvider = ({ children }) => {
                 config
             );
             setProyectos([...proyectos, data]);
-            setCreado(true);
+            setExito(true);
 
             setTimeout(() => {
-                setCreado(false);
+                setExito(false);
                 setAlerta({ msg: '', error: false });
                 navigate('/proyectos');
             }, 1500);
@@ -225,10 +226,10 @@ const ProyectosProvider = ({ children }) => {
 
             setProyecto(proyectoActualizado);
 
-            setCreado(true);
+            setExito(true);
 
             setTimeout(() => {
-                setCreado(false);
+                setExito(false);
                 setAlerta({ msg: '', error: false });
                 setModalTarea(false);
             }, 1500);
@@ -256,10 +257,10 @@ const ProyectosProvider = ({ children }) => {
 
             setProyecto(proyectoActualizado);
 
-            setCreado(true);
+            setExito(true);
 
             setTimeout(() => {
-                setCreado(false);
+                setExito(false);
                 setAlerta({ msg: '', error: false });
                 setModalTarea(false);
             }, 1500);
@@ -323,6 +324,35 @@ const ProyectosProvider = ({ children }) => {
             console.log(error);
         }
     };
+
+    const submitColaborador = async (email) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await clienteAxios.post(
+                '/proyectos/colaboradores',
+                { email },
+                config
+            );
+            setError(false);
+            setExito(true);
+        } catch (error) {
+            setAlerta({
+                msg: error.response.data.msg,
+                error: true,
+            });
+            setError(true);
+            setExito(false);
+        }
+    };
     // ---- ---- ---- ---- //
 
     // ---- EFECTOS ---- //
@@ -361,8 +391,8 @@ const ProyectosProvider = ({ children }) => {
                 alerta,
                 setAlerta,
                 submitProyecto,
-                creado,
-                setCreado,
+                exito,
+                setExito,
                 obtenerProyecto,
                 proyecto,
                 cargando,
@@ -373,6 +403,8 @@ const ProyectosProvider = ({ children }) => {
                 handleEditarTarea,
                 tarea,
                 handleDeleteTarea,
+                submitColaborador,
+                error,
             }}
         >
             {children}

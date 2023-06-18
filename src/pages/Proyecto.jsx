@@ -10,6 +10,7 @@ import {
 import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { TbSubtask } from 'react-icons/tb';
 import { AiOutlineUser } from 'react-icons/ai';
+import { BsPersonPlusFill } from 'react-icons/bs';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Link } from 'react-router-dom';
@@ -203,7 +204,7 @@ export default function Proyecto() {
 
                 {/* Agregar Tareas */}
                 <button
-                    className="flex justify-center items-center text-sm px-5 py-3 w-full sm:w-auto rounded-lg uppercase font-black bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-white text-center mt-5"
+                    className="flex gap-1 justify-center items-center text-sm px-5 py-3 w-full sm:w-auto rounded-lg uppercase font-black bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-white text-center mt-5"
                     type="button"
                     onClick={handleModalTarea}
                 >
@@ -226,7 +227,9 @@ export default function Proyecto() {
                 <h2 className="text-gray-200 font-black uppercase text-lg mt-10">
                     Tareas del Proyecto
                 </h2>
+                {/* Listado de las Tareas */}
                 <div className="mt-10">
+                    {/* Tarea */}
                     <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-4">
                         {proyecto?.tareas?.length ? (
                             proyecto.tareas?.map((tarea) => (
@@ -241,10 +244,28 @@ export default function Proyecto() {
                 </div>
             </div>
 
+            {/* Colaboradores */}
+            <div className="p-5 sm:p-7 md:p-10">
+                {/* Titulo */}
+                <h2 className="text-gray-200 font-black uppercase text-lg mt-10">
+                    Colaboradores del Proyecto
+                </h2>
+                {/* Agregar Colaboradores */}
+                <Link
+                    className="flex justify-center items-center sm:inline-block text-sm px-5 py-3 w-full sm:w-auto rounded-lg uppercase font-black bg-sky-500 hover:bg-sky-600 transition-colors duration-300 text-white text-center mt-5"
+                    to={`/proyectos/nuevo-colaborador/${proyecto._id}`}
+                >
+                    <div className="flex gap-1 justify-center items-center">
+                        <BsPersonPlusFill fontSize={20} />
+                        Agregar Colaborador(a)
+                    </div>
+                </Link>
+            </div>
+
             {/* Modal de Tareas */}
             <ModalTarea />
 
-            {/* Modal del Creado */}
+            {/* Modal del Creador */}
             <ModalUsuario
                 modalUsuario={modalUsuario}
                 setModalUsuario={setModalUsuario}

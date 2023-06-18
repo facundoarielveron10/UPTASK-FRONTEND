@@ -14,7 +14,7 @@ export default function FormularioProyecto() {
         submitProyecto,
         proyecto,
         setAlerta,
-        creado,
+        exito,
     } = useProyectos();
     // ---- ---- ---- ---- //
 
@@ -94,7 +94,7 @@ export default function FormularioProyecto() {
 
             <form
                 className={`${
-                    creado ? 'border-teal-500' : 'border-[#080808]'
+                    exito ? 'border-teal-500' : 'border-[#080808]'
                 } border ${
                     alerta.error &
                     [nombre, descripcion, fechaEntrega, cliente].includes('')
@@ -108,7 +108,7 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado ? 'text-teal-500' : 'text-gray-50'
+                            exito ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [nombre].includes('')
                                 ? 'text-red-500'
@@ -121,7 +121,7 @@ export default function FormularioProyecto() {
                     {/* Nombre */}
                     <input
                         className={` ${
-                            creado
+                            exito
                                 ? 'border-teal-500'
                                 : 'border-gray-900 hover:border-teal-500'
                         } border-[3px] ${
@@ -133,7 +133,7 @@ export default function FormularioProyecto() {
                         id="nombre"
                         placeholder="Nombre del Proyecto"
                         value={nombre}
-                        disabled={creado ? true : false}
+                        disabled={exito ? true : false}
                         onChange={(e) => setNombre(e.target.value)}
                     />
                 </div>
@@ -143,7 +143,7 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado ? 'text-teal-500' : 'text-gray-50'
+                            exito ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [descripcion].includes('')
                                 ? 'text-red-500'
@@ -156,7 +156,7 @@ export default function FormularioProyecto() {
                     {/* Descripcion */}
                     <textarea
                         className={`${
-                            creado
+                            exito
                                 ? 'border-teal-500'
                                 : 'border-gray-900 hover:border-teal-500'
                         } border-[3px] ${
@@ -168,7 +168,7 @@ export default function FormularioProyecto() {
                         placeholder="Descripcion del Proyecto"
                         value={descripcion}
                         rows={4}
-                        disabled={creado ? true : false}
+                        disabled={exito ? true : false}
                         onChange={(e) => setDescripcion(e.target.value)}
                     />
                 </div>
@@ -178,7 +178,7 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado ? 'text-teal-500' : 'text-gray-50'
+                            exito ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [fechaEntrega].includes('')
                                 ? 'text-red-500'
@@ -191,7 +191,7 @@ export default function FormularioProyecto() {
                     {/* Fecha Entrega */}
                     <input
                         className={`${
-                            creado
+                            exito
                                 ? 'border-teal-500'
                                 : 'border-gray-900 hover:border-teal-500'
                         } border-[3px] ${
@@ -203,7 +203,7 @@ export default function FormularioProyecto() {
                         id="fecha-entrega"
                         placeholder="Fecha de Entrega del Proyecto"
                         value={fechaEntrega}
-                        disabled={creado ? true : false}
+                        disabled={exito ? true : false}
                         onChange={(e) => setFechaEntrega(e.target.value)}
                     />
                 </div>
@@ -213,7 +213,7 @@ export default function FormularioProyecto() {
                     {/* Texto Ayuda */}
                     <label
                         className={`${
-                            creado ? 'text-teal-500' : 'text-gray-50'
+                            exito ? 'text-teal-500' : 'text-gray-50'
                         } ${
                             alerta.error & [cliente].includes('')
                                 ? 'text-red-500'
@@ -226,7 +226,7 @@ export default function FormularioProyecto() {
                     {/* Cliente */}
                     <input
                         className={`${
-                            creado
+                            exito
                                 ? 'border-teal-500'
                                 : 'border-gray-900 hover:border-teal-500'
                         } border-[3px] ${
@@ -238,7 +238,7 @@ export default function FormularioProyecto() {
                         id="cliente"
                         placeholder="Cliente del Proyecto"
                         value={cliente}
-                        disabled={creado ? true : false}
+                        disabled={exito ? true : false}
                         onChange={(e) => setCliente(e.target.value)}
                     />
                 </div>
@@ -255,7 +255,7 @@ export default function FormularioProyecto() {
                     } cursor-pointer text-gray-50 w-full py-3 mt-3 uppercase font-bold rounded-xl transition-colors duration-300`}
                     type="submit"
                     value={`${id ? 'Editar Proyecto' : 'Crear Proyecto'}`}
-                    disabled={creado ? true : false}
+                    disabled={exito ? true : false}
                 />
             </form>
         </div>

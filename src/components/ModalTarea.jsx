@@ -19,7 +19,7 @@ const ModalFormularioTarea = () => {
         mostrarAlerta,
         alerta,
         submitTarea,
-        creado,
+        exito,
         tarea,
     } = useProyectos();
     // ---- ---- ---- ---- //
@@ -184,7 +184,7 @@ const ModalFormularioTarea = () => {
                                         <div className="mb-5">
                                             <label
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'text-teal-500'
                                                         : 'text-gray-200'
                                                 } ${
@@ -199,7 +199,7 @@ const ModalFormularioTarea = () => {
                                             </label>
                                             <input
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'border-teal-500'
                                                         : 'border-gray-900 hover:border-teal-500'
                                                 } ${
@@ -212,7 +212,7 @@ const ModalFormularioTarea = () => {
                                                 type="text"
                                                 placeholder="Nombre de la Tarea"
                                                 value={nombre}
-                                                disabled={creado ? true : false}
+                                                disabled={exito ? true : false}
                                                 onChange={(e) =>
                                                     setNombre(e.target.value)
                                                 }
@@ -222,7 +222,7 @@ const ModalFormularioTarea = () => {
                                         <div className="mb-5">
                                             <label
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'text-teal-500'
                                                         : 'text-gray-200'
                                                 } ${
@@ -237,7 +237,7 @@ const ModalFormularioTarea = () => {
                                             </label>
                                             <textarea
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'border-teal-500'
                                                         : 'border-gray-900 hover:border-teal-500'
                                                 } ${
@@ -250,7 +250,7 @@ const ModalFormularioTarea = () => {
                                                 placeholder="Descripcion de la Tarea"
                                                 value={descripcion}
                                                 rows={4}
-                                                disabled={creado ? true : false}
+                                                disabled={exito ? true : false}
                                                 onChange={(e) =>
                                                     setDescripcion(
                                                         e.target.value
@@ -262,7 +262,7 @@ const ModalFormularioTarea = () => {
                                         <div className="mb-5">
                                             <label
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'text-teal-500'
                                                         : 'text-gray-200'
                                                 } ${
@@ -277,7 +277,7 @@ const ModalFormularioTarea = () => {
                                             </label>
                                             <input
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'border-teal-500'
                                                         : 'border-gray-900 hover:border-teal-500'
                                                 } ${
@@ -289,7 +289,7 @@ const ModalFormularioTarea = () => {
                                                 id="fecha-entrega"
                                                 type="date"
                                                 value={fechaEntrega}
-                                                disabled={creado ? true : false}
+                                                disabled={exito ? true : false}
                                                 onChange={(e) =>
                                                     setFechaEntrega(
                                                         e.target.value
@@ -301,7 +301,7 @@ const ModalFormularioTarea = () => {
                                         <div className="mb-5">
                                             <label
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'text-teal-500'
                                                         : 'text-gray-200'
                                                 } ${
@@ -316,7 +316,7 @@ const ModalFormularioTarea = () => {
                                             </label>
                                             <select
                                                 className={`${
-                                                    creado
+                                                    exito
                                                         ? 'border-teal-500'
                                                         : 'border-gray-900 hover:border-teal-500'
                                                 } ${
@@ -351,7 +351,7 @@ const ModalFormularioTarea = () => {
                                                     ? 'Editar Tarea'
                                                     : 'Crear Tarea'
                                             }`}
-                                            disabled={creado ? true : false}
+                                            disabled={exito ? true : false}
                                         />
                                     </form>
                                 </div>
