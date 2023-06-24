@@ -18,6 +18,7 @@ import Spinner from '../components/Spinner';
 import ModalTarea from '../components/ModalTarea';
 import ModalUsuario from '../components/ModalUsuario';
 import Tarea from '../components/Tarea';
+import Colaborador from '../components/Colaborador';
 // ---- ---- ---- ---- ---- //
 
 // ---- PAGINA (PROYECTO) ---- //
@@ -260,6 +261,23 @@ export default function Proyecto() {
                         Agregar Colaborador(a)
                     </div>
                 </Link>
+                {/* Listado de Colaboradores */}
+                <div className="mt-10">
+                    <div className="grid 2md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-2">
+                        {proyecto?.colaboradores?.length ? (
+                            proyecto?.colaboradores?.map((colaborador) => (
+                                <Colaborador
+                                    key={colaborador._id}
+                                    colaborador={colaborador}
+                                />
+                            ))
+                        ) : (
+                            <p className="text-center my-5 p-10 uppercase font-black text-gray-50">
+                                No hay Colaboradores en este proyecto
+                            </p>
+                        )}
+                    </div>
+                </div>
             </div>
 
             {/* Modal de Tareas */}

@@ -18,7 +18,7 @@ export default function Tarea({ tarea }) {
     const { descripcion, nombre, prioridad, fechaEntrega, estado, _id } = tarea;
     // ---- ---- ---- ---- ---- ---- //
     return (
-        <div className="flex flex-col justify-between items-center bg-gray-900 shadow rounded-lg border-[3px] border-gray-950 p-5">
+        <div className="flex flex-col justify-between items-center bg-gray-900 shadow rounded-lg border-[3px] border-gray-950 p-5 hover:border-teal-500 transition-colors duration-300">
             {/* Completa o Incompleta */}
             <div className="flex justify-end w-full">
                 <p className="text-xs text-gray-50 uppercase font-black">
