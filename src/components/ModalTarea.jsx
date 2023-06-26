@@ -344,7 +344,17 @@ const ModalFormularioTarea = () => {
                                         </div>
                                         {/* Boton Enviar */}
                                         <input
-                                            className="w-full bg-sky-500 hover:bg-sky-600 transition-colors duration-300 p-3 text-gray-50 uppercase font-black cursor-pointer rounded"
+                                            className={`w-full ${
+                                                alerta.error &
+                                                [
+                                                    nombre,
+                                                    descripcion,
+                                                    fechaEntrega,
+                                                    prioridad,
+                                                ].includes('')
+                                                    ? 'bg-red-500 hover:bg-red-600'
+                                                    : 'bg-sky-500 hover:bg-sky-600'
+                                            } transition-colors duration-300 p-3 text-gray-50 uppercase font-black cursor-pointer rounded`}
                                             type="submit"
                                             value={`${
                                                 idTarea
