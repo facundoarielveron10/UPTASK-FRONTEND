@@ -13,12 +13,12 @@ export default function Proyectos() {
 
 	// ---- DATOS ---- //
 	const { auth } = useAuth();
-	const proyectoColaborador = proyectos.filter(proyecto =>
+	const proyectoColaborador = proyectos?.filter(proyecto =>
 		proyecto.colaboradores.some(
 			colaborador => colaborador.toString() === auth._id.toString(),
 		),
 	);
-	const misProyectos = proyectos.filter(
+	const misProyectos = proyectos?.filter(
 		proyecto => proyecto.creador.toString() === auth._id.toString(),
 	);
 	// ---- ---- ---- //
@@ -37,8 +37,8 @@ export default function Proyectos() {
 					Mis Proyectos
 				</h2>
 				<div>
-					{misProyectos.length ? (
-						misProyectos.map(proyecto => (
+					{misProyectos?.length ? (
+						misProyectos?.map(proyecto => (
 							<PreviewProyecto
 								key={proyecto._id}
 								proyecto={proyecto}
@@ -57,8 +57,8 @@ export default function Proyectos() {
 					Colaborador
 				</h2>
 				<div>
-					{proyectoColaborador.length ? (
-						proyectoColaborador.map(proyecto => (
+					{proyectoColaborador?.length ? (
+						proyectoColaborador?.map(proyecto => (
 							<PreviewProyecto
 								key={proyecto._id}
 								proyecto={proyecto}
