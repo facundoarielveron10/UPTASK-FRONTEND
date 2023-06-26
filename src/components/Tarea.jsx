@@ -17,9 +17,18 @@ export default function Tarea({ tarea }) {
     // ---- ---- ---- ---- //
 
     // ---- DATOS ---- //
-    const { descripcion, nombre, prioridad, fechaEntrega, estado, _id } = tarea;
+    const {
+        completado,
+        descripcion,
+        nombre,
+        prioridad,
+        fechaEntrega,
+        estado,
+        _id,
+    } = tarea;
     const admin = useAdmin();
     // ---- ---- ---- ---- ---- ---- //
+
     return (
         <div
             className={`flex flex-col justify-between items-center bg-gray-900 shadow rounded-lg border-[3px] ${
@@ -66,7 +75,7 @@ export default function Tarea({ tarea }) {
                 </p>
             </div>
             {/* Datos de la tera */}
-            <div className="flex flex-col justify-between gap-2 w-full h-full">
+            <div className="flex flex-col items-start justify-between gap-2 w-full h-full">
                 {/* Nombre y Descripcion de la tarea */}
                 <div>
                     <p className="text-xl uppercase font-black text-gray-50">
@@ -95,6 +104,17 @@ export default function Tarea({ tarea }) {
                         {prioridad}
                     </p>
                 </div>
+                {/* Completado */}
+                {estado && (
+                    <div>
+                        <p className="text-xl uppercase font-black text-gray-50">
+                            Completada por:
+                        </p>
+                        <p className="text-base font-bold text-green-500">
+                            {completado?.nombre}
+                        </p>
+                    </div>
+                )}
             </div>
             {/* Acciones de la Tarea */}
             <div className="flex gap-10 mt-4">

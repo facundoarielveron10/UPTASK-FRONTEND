@@ -21,6 +21,7 @@ const ProyectosProvider = ({ children }) => {
     const [modalTarea, setModalTarea] = useState(false);
     const [tarea, setTarea] = useState({});
     const [colaborador, setColaborador] = useState({});
+    const [buscador, setBuscador] = useState(false);
     // ---- ---- ---- ---- //
 
     // ---- SWEET ALERTA ---- //
@@ -499,6 +500,10 @@ const ProyectosProvider = ({ children }) => {
             console.log(error.response);
         }
     };
+
+    const handleBuscador = () => {
+        setBuscador(!buscador);
+    };
     // ---- ---- ---- ---- //
 
     // ---- EFECTOS ---- //
@@ -555,6 +560,8 @@ const ProyectosProvider = ({ children }) => {
                 agregarColaborador,
                 handleDeleteColaborador,
                 completarTarea,
+                handleBuscador,
+                buscador,
             }}
         >
             {children}
