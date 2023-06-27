@@ -17,6 +17,7 @@
         "react-icons": "^4.8.0",
         "react-router-dom": "^6.8.2",
         "react-tooltip": "^5.13.2",
+        "socket.io-client": "^4.7.0",
         "sweetalert2": "^11.7.12",
         "sweetalert2-react-content": "^5.0.7"
     },
