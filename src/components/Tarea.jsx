@@ -143,7 +143,7 @@ export default function Tarea({ tarea }) {
                             id="eliminar-tarea"
                         />
                         <button
-                            onClick={() => handleDeleteTarea(_id, nombre)}
+                            onClick={() => handleDeleteTarea(tarea, nombre)}
                             data-tooltip-id="eliminar-tarea"
                             data-tooltip-content="Eliminar Tarea"
                             className="text-red-500 opacity-80 hover:opacity-100 transition-opacity duration-300 border-[2px] border-red-500 rounded-lg p-1"

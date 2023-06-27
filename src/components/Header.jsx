@@ -1,5 +1,6 @@
 // ---- IMPORTACIONES ---- //
 import useProyectos from '../hooks/useProyectos';
+import useAuth from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import { BiLogIn } from 'react-icons/bi';
 import Busqueda from './Busqueda';
@@ -8,7 +9,17 @@ import Busqueda from './Busqueda';
 // ---- COMPONENTE (HEADER) ---- //
 export default function Header() {
     // ---- CONTEXTs ---- //
-    const { handleBuscador } = useProyectos();
+    const { handleBuscador, cerrarSesionProyectos } = useProyectos();
+    const { cerrarSesionAuth } = useAuth();
+    // ---- ---- ---- ---- //
+
+    // ---- FUNCIONES ---- //
+    const handleCerrarSesion = () => {
+        cerrarSesionProyectos();
+        cerrarSesionAuth();
+
+        localStorage.removeItem('token');
+    };
     // ---- ---- ---- ---- //
 
     return (
@@ -40,6 +51,7 @@ export default function Header() {
                         <button
                             className="text-sky-600 hover:text-teal-500 transition-colors duration-300"
                             type="button"
+                            onClick={handleCerrarSesion}
                         >
                             <BiLogIn fontSize={35} />
                         </button>

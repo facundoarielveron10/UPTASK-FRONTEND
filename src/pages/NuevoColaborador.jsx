@@ -116,9 +116,7 @@ export default function NuevoColaborador() {
                                     className="bg-sky-700 hover:bg-teal-500 cursor-pointer text-gray-50 w-full py-3 mt-3 uppercase font-bold rounded-xl transition-colors duration-300"
                                     type="button"
                                     onClick={() =>
-                                        agregarColaborador({
-                                            email: colaborador?.email,
-                                        })
+                                        agregarColaborador(colaborador)
                                     }
                                 >
                                     Agregar al Proyecto

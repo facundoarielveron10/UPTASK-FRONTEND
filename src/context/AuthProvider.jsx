@@ -54,6 +54,11 @@ const AuthProvider = ({ children }) => {
     const mostrarAlerta = (alerta) => {
         setAlerta(alerta);
     };
+
+    const cerrarSesionAuth = () => {
+        setAuth({});
+        setAlerta({});
+    };
     // ---- ---- ---- ---- //
 
     return (
@@ -65,6 +70,7 @@ const AuthProvider = ({ children }) => {
                 alerta,
                 setAlerta,
                 cargando,
+                cerrarSesionAuth,
             }}
         >
             {children}
