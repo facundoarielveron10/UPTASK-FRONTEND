@@ -27,6 +27,7 @@ const ProyectosProvider = ({ children }) => {
     const [tarea, setTarea] = useState({});
     const [colaborador, setColaborador] = useState({});
     const [buscador, setBuscador] = useState(false);
+    const [editando, setEditando] = useState(false);
     // ---- ---- ---- ---- //
 
     // ---- SWEET ALERTA ---- //
@@ -552,6 +553,9 @@ const ProyectosProvider = ({ children }) => {
 
         setProyecto(proyectoActualizado);
     };
+    const editandoProyecto = (estado) => {
+        setEditando(estado);
+    };
     // ---- ---- ---- ---- //
 
     // ---- EFECTOS ---- //
@@ -623,6 +627,8 @@ const ProyectosProvider = ({ children }) => {
                 submitColaboradoresProyectos,
                 eliminarColaboradorProyectos,
                 cerrarSesionProyectos,
+                editandoProyecto,
+                editando,
             }}
         >
             {children}

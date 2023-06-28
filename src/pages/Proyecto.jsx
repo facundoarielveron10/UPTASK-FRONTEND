@@ -46,6 +46,8 @@ export default function Proyecto() {
         completarTareaProyecto,
         submitColaboradoresProyectos,
         eliminarColaboradorProyectos,
+        editandoProyecto,
+        editando,
     } = useProyectos();
     // ---- ---- ---- ---- //
 
@@ -71,6 +73,18 @@ export default function Proyecto() {
         socket.on('proyecto editado', (proyectoEditado) => {
             if (proyectoEditado?._id === proyecto?._id) {
                 editarProyectoProyectos(proyectoEditado);
+            }
+        });
+
+        socket.on('editando', (estado, proyectoEditar) => {
+            if (proyectoEditar === proyecto?._id) {
+                editandoProyecto(estado);
+            }
+        });
+
+        socket.on('informacion', (estado, proyectoEditar) => {
+            if (proyectoEditar === proyecto?._id) {
+                editandoProyecto(estado);
             }
         });
 
@@ -116,7 +130,6 @@ export default function Proyecto() {
             }
         );
     });
-
     // ---- ---- ---- ---- //
 
     // ---- DATOS ---- //
@@ -381,6 +394,14 @@ export default function Proyecto() {
                             </div>
                         </div>
                     </div>
+
+                    {editando && (
+                        <div className="fixed top-0 mt-8">
+                            <p className="flex justify-center items-center gap-4 text-sky-500 font-black uppercase text-lg bg-gray-900 border-[3px] border-gray-950 hover:border-teal-500 hover:text-teal-500 transition-colors duration-300 p-4 rounded-lg">
+                                <FiEdit2 fontSize={25} />
+                            </p>
+                        </div>
+                    )}
 
                     {/* Modal de Tareas */}
                     <ModalTarea />

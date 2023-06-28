@@ -7,11 +7,16 @@ import { BsInfoLg } from 'react-icons/bs';
 import { AiOutlineUser } from 'react-icons/ai';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
+import io from 'socket.io-client';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import FormularioProyecto from '../components/FormularioProyecto';
 import ModalUsuario from '../components/ModalUsuario';
 // ---- ---- ---- ---- ---- //
+
+// ---- SOCKET IO ---- //
+let socket;
+// ---- ---- ---- ---- //
 
 // ---- PAGINA (EDITAR PROYECTO) ---- //
 export default function EditarProyecto() {
@@ -31,6 +36,11 @@ export default function EditarProyecto() {
     // ---- EFECTOS ---- //
     useEffect(() => {
         obtenerProyecto(id);
+    }, []);
+
+    useEffect(() => {
+        socket = io(import.meta.env.VITE_BACK_URL);
+        socket.emit('editar', true, id);
     }, []);
     // ---- ---- ---- ---- //
 
