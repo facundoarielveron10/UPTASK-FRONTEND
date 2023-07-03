@@ -1,8 +1,8 @@
 // ---- IMPORTACIONES ---- //
-import { set } from 'date-fns/esm';
 import { useState, useEffect, createContext } from 'react';
 import clienteAxios from '../config/ClienteAxios';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import io from 'socket.io-client';
@@ -16,6 +16,10 @@ let socket;
 const ProyectosContext = createContext();
 
 const ProyectosProvider = ({ children }) => {
+    // ---- CONTEXTs ---- //
+    const { auth } = useAuth();
+    // ---- ---- ---- ---- //
+
     // ---- ESTADOS ---- //
     const [proyectos, setProyectos] = useState([]);
     const [proyecto, setProyecto] = useState({});
@@ -580,10 +584,8 @@ const ProyectosProvider = ({ children }) => {
             }
         };
 
-        return () => {
-            proyectosUsuario();
-        };
-    }, []);
+        proyectosUsuario();
+    }, [auth]);
 
     useEffect(() => {
         socket = io(import.meta.env.VITE_BACK_URL);
